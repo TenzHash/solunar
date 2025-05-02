@@ -866,6 +866,15 @@ We offer the highest quality products and services available in the market.     
                       <option value="cloudy">Cloudy Region</option>
                     </select>
                   </div>
+                  <div class="mb-3">
+                    <label for="systemType" class="form-label">System Type</label>
+                    <select class="form-select" id="systemType" required>
+                      <option value="">Select System Type</option>
+                      <option value="grid-tied">Grid-Tied System</option>
+                      <option value="off-grid">Off-Grid System</option>
+                    </select>
+                    <small class="text-muted">Choose between grid-tied or off-grid system</small>
+                  </div>
                   <button type="submit" class="btn btn-primary">Calculate</button>
                 </form>
                 <div id="calculatorResults" class="mt-3"></div>
@@ -909,22 +918,51 @@ We offer the highest quality products and services available in the market.     
             <div class="card h-100">
               <div class="card-body">
                 <h5 class="card-title">Solar Power Simulation</h5>
-                <p class="card-text">Simulate your solar power generation</p>
+                <p class="card-text">Simulate your solar power generation and savings</p>
+                
+                <!-- System Configuration -->
                 <div class="mb-3">
                   <label for="panelCount" class="form-label">Number of Panels</label>
-                  <input type="number" class="form-control" id="panelCount" value="10">
+                  <input type="number" class="form-control" id="panelCount" value="10" required>
+                  <small class="text-muted">Number of solar panels in your system</small>
                 </div>
                 <div class="mb-3">
                   <label for="panelWattage" class="form-label">Panel Wattage (W)</label>
-                  <input type="number" class="form-control" id="panelWattage" value="300">
+                  <select class="form-select" id="panelWattage" required>
+                    <option value="250">250W (Standard)</option>
+                    <option value="300">300W (Premium)</option>
+                    <option value="350">350W (High-Efficiency)</option>
+                    <option value="400">400W (Ultra-Efficient)</option>
+                  </select>
+                  <small class="text-muted">Select your panel wattage</small>
                 </div>
                 <div class="mb-3">
-                  <label for="sunHours" class="form-label">Daily Sun Hours</label>
-                  <input type="number" class="form-control" id="sunHours" value="5">
+                  <label for="location" class="form-label">Location</label>
+                  <select class="form-select" id="location" required>
+                    <option value="sunny">Sunny Region (5 sun hours)</option>
+                    <option value="moderate">Moderate Region (4 sun hours)</option>
+                    <option value="cloudy">Cloudy Region (3 sun hours)</option>
+                  </select>
+                  <small class="text-muted">Select your location to estimate sun hours</small>
                 </div>
                 <div class="mb-3">
-                  <label for="efficiency" class="form-label">System Efficiency (%)</label>
-                  <input type="number" class="form-control" id="efficiency" value="85">
+                  <label for="systemEfficiency" class="form-label">System Efficiency (%)</label>
+                  <input type="number" class="form-control" id="systemEfficiency" value="85" required>
+                  <small class="text-muted">Typical efficiency: 80-90%</small>
+                </div>
+                <div class="mb-3">
+                  <label for="monthlyBill" class="form-label">Monthly Electricity Bill (₱)</label>
+                  <input type="number" class="form-control" id="monthlyBill" value="1000" required>
+                  <small class="text-muted">Your current monthly electricity bill</small>
+                </div>
+                <div class="mb-3">
+                  <label for="usagePattern" class="form-label">Usage Pattern</label>
+                  <select class="form-select" id="usagePattern" required>
+                    <option value="even">Even Usage (Day/Night)</option>
+                    <option value="day-heavy">Day Heavy (70% Day)</option>
+                    <option value="night-heavy">Night Heavy (70% Night)</option>
+                  </select>
+                  <small class="text-muted">Select your typical usage pattern</small>
                 </div>
                 <button onclick="runSimulation()" class="btn btn-primary">Run Simulation</button>
                 <div id="simulationResults" class="mt-3"></div>
@@ -1361,11 +1399,19 @@ We offer the highest quality products and services available in the market.     
         const backupDays = parseFloat(document.getElementById('backupDays').value);
         const backupHours = parseFloat(document.getElementById('backupHours').value);
         const location = document.getElementById('location').value;
-        
+        const systemType = document.getElementById('systemType').value;
+
         // Constants
         const DAYS_IN_MONTH = 30;
-        const PANEL_WATTAGE = 300; // Average panel wattage
-        const PANEL_AREA = 2; // Average panel area in sqm
+        const PANEL_WATTAGE = 300; // Average solar panel wattage
+        const PANEL_AREA = 1.6; // Average panel area in sqm
+        const PANEL_COST_GRID = 15000; // ₱15,000 per panel for grid-tied
+        const PANEL_COST_OFFGRID = 18000; // ₱18,000 per panel for off-grid (premium panels)
+        const INVERTER_COST_GRID = 30000; // ₱30,000 for grid-tied inverter
+        const INVERTER_COST_OFFGRID = 45000; // ₱45,000 for off-grid inverter
+        const INSTALLATION_COST_GRID = 20000; // ₱20,000 for grid-tied installation
+        const INSTALLATION_COST_OFFGRID = 30000; // ₱30,000 for off-grid installation
+        const BATTERY_COST = 15000; // ₱15,000 per kWh battery capacity
         const SYSTEM_EFFICIENCY = 0.85;
 
         // Calculate daily usage
@@ -1394,13 +1440,21 @@ We offer the highest quality products and services available in the market.     
 
         // Calculate required panels
         requiredPanels = Math.ceil(dailyUsage / dailyGeneration);
-        
-        // Calculate system cost
-        const panelCost = 200; // Approximate cost per panel
-        const inverterCost = 1000; // Approximate inverter cost
-        const installationCost = 500; // Approximate installation cost
-        
-        systemCost = (requiredPanels * panelCost) + inverterCost + installationCost;
+
+        // Calculate system cost based on system type
+        let panelCost = PANEL_COST_GRID;
+        let inverterCost = INVERTER_COST_GRID;
+        let installationCost = INSTALLATION_COST_GRID;
+        let batteryCost = 0;
+
+        if (systemType === 'off-grid') {
+          panelCost = PANEL_COST_OFFGRID;
+          inverterCost = INVERTER_COST_OFFGRID;
+          installationCost = INSTALLATION_COST_OFFGRID;
+          batteryCost = backupBatteryCapacity * BATTERY_COST / 1000; // Convert Wh to kWh
+        }
+
+        systemCost = (requiredPanels * panelCost) + inverterCost + installationCost + batteryCost;
 
         // Calculate payback period
         const annualSavings = monthlyBill * 12 * 0.8; // 80% savings
@@ -1526,6 +1580,112 @@ We offer the highest quality products and services available in the market.     
     }
   </script>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get input values
+      const panelCount = parseFloat(document.getElementById('panelCount').value);
+      const panelWattage = parseFloat(document.getElementById('panelWattage').value);
+      const location = document.getElementById('location').value;
+      const systemEfficiency = parseFloat(document.getElementById('systemEfficiency').value) / 100;
+      const monthlyBill = parseFloat(document.getElementById('monthlyBill').value);
+      const usagePattern = document.getElementById('usagePattern').value;
+
+      // Constants
+      const DAYS_IN_MONTH = 30;
+      const DAYS_IN_YEAR = 365;
+      const USAGE_PATTERN_FACTORS = {
+        'even': 1.0,
+        'day-heavy': 1.2,
+        'night-heavy': 0.8
+      };
+
+      // Calculate sun hours based on location
+      let sunHours = 0;
+      switch(location) {
+        case 'sunny':
+          sunHours = 5; // 5 sun hours
+          break;
+        case 'moderate':
+          sunHours = 4; // 4 sun hours
+          break;
+        case 'cloudy':
+          sunHours = 3; // 3 sun hours
+          break;
+      }
+
+      // Calculate generation
+      const dailyGeneration = panelCount * panelWattage * sunHours * systemEfficiency;
+      const monthlyGeneration = dailyGeneration * DAYS_IN_MONTH;
+      const yearlyGeneration = dailyGeneration * DAYS_IN_YEAR;
+
+      // Calculate savings based on usage pattern
+      const usageFactor = USAGE_PATTERN_FACTORS[usagePattern];
+      const monthlySavings = (monthlyBill * usageFactor * 0.8).toFixed(2); // 80% savings
+      const yearlySavings = monthlySavings * 12;
+
+      // Calculate payback period
+      const systemCost = panelCount * 15000 + 30000 + 20000; // Panels + Inverter + Installation
+      const paybackPeriod = (systemCost / yearlySavings).toFixed(1);
+
+      // Generate results
+      const results = document.getElementById('simulationResults');
+      results.innerHTML = `
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Power Generation</h6>
+                <p><strong>Daily Generation:</strong> ${dailyGeneration.toFixed(2)} kWh</p>
+                <p><strong>Monthly Generation:</strong> ${monthlyGeneration.toFixed(2)} kWh</p>
+                <p><strong>Yearly Generation:</strong> ${yearlyGeneration.toFixed(2)} kWh</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Financial Analysis</h6>
+                <p><strong>Monthly Savings:</strong> ₱${monthlySavings}</p>
+                <p><strong>Yearly Savings:</strong> ₱${yearlySavings.toFixed(2)}</p>
+                <p><strong>Payback Period:</strong> ${paybackPeriod} years</p>
+                <p><strong>ROI:</strong> ${(100 / paybackPeriod).toFixed(1)}% per year</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-3">
+          <canvas id="generationChart"></canvas>
+        </div>
+      `;
+
+      // Create generation chart
+      const ctx = document.getElementById('generationChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Daily', 'Monthly', 'Yearly'],
+          datasets: [{
+            label: 'Generation (kWh)',
+            data: [dailyGeneration, monthlyGeneration, yearlyGeneration],
+            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    });
+  </script>
+
+  <!-- Add Chart.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 
 </html>
