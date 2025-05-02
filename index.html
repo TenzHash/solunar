@@ -1562,126 +1562,121 @@ We offer the highest quality products and services available in the market.     
 
   <script>
     function runSimulation() {
-      const panelCount = parseFloat(document.getElementById('panelCount').value);
-      const panelWattage = parseFloat(document.getElementById('panelWattage').value);
-      const sunHours = parseFloat(document.getElementById('sunHours').value);
-      const efficiency = parseFloat(document.getElementById('efficiency').value) / 100;
+      try {
+        // Get input values
+        const panelCount = parseFloat(document.getElementById('panelCount').value) || 10;
+        const panelWattage = parseFloat(document.getElementById('panelWattage').value) || 300;
+        const location = document.getElementById('location').value || 'moderate';
+        const systemEfficiency = parseFloat(document.getElementById('systemEfficiency').value) || 85;
+        const monthlyBill = parseFloat(document.getElementById('monthlyBill').value) || 1000;
+        const usagePattern = document.getElementById('usagePattern').value || 'even';
 
-      const dailyGeneration = panelCount * panelWattage * sunHours * efficiency;
-      const monthlyGeneration = dailyGeneration * 30;
-      const yearlyGeneration = dailyGeneration * 365;
+        // Constants
+        const DAYS_IN_MONTH = 30;
+        const DAYS_IN_YEAR = 365;
+        const USAGE_PATTERN_FACTORS = {
+          'even': 1.0,
+          'day-heavy': 1.2,
+          'night-heavy': 0.8
+        };
 
-      const results = document.getElementById('simulationResults');
-      results.innerHTML = `
-        <p><strong>Daily Generation:</strong> ${dailyGeneration.toFixed(2)} kWh</p>
-        <p><strong>Monthly Generation:</strong> ${monthlyGeneration.toFixed(2)} kWh</p>
-        <p><strong>Yearly Generation:</strong> ${yearlyGeneration.toFixed(2)} kWh</p>
-      `;
-    }
-  </script>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Get input values
-      const panelCount = parseFloat(document.getElementById('panelCount').value);
-      const panelWattage = parseFloat(document.getElementById('panelWattage').value);
-      const location = document.getElementById('location').value;
-      const systemEfficiency = parseFloat(document.getElementById('systemEfficiency').value) / 100;
-      const monthlyBill = parseFloat(document.getElementById('monthlyBill').value);
-      const usagePattern = document.getElementById('usagePattern').value;
-
-      // Constants
-      const DAYS_IN_MONTH = 30;
-      const DAYS_IN_YEAR = 365;
-      const USAGE_PATTERN_FACTORS = {
-        'even': 1.0,
-        'day-heavy': 1.2,
-        'night-heavy': 0.8
-      };
-
-      // Calculate sun hours based on location
-      let sunHours = 0;
-      switch(location) {
-        case 'sunny':
-          sunHours = 5; // 5 sun hours
-          break;
-        case 'moderate':
-          sunHours = 4; // 4 sun hours
-          break;
-        case 'cloudy':
-          sunHours = 3; // 3 sun hours
-          break;
-      }
-
-      // Calculate generation
-      const dailyGeneration = panelCount * panelWattage * sunHours * systemEfficiency;
-      const monthlyGeneration = dailyGeneration * DAYS_IN_MONTH;
-      const yearlyGeneration = dailyGeneration * DAYS_IN_YEAR;
-
-      // Calculate savings based on usage pattern
-      const usageFactor = USAGE_PATTERN_FACTORS[usagePattern];
-      const monthlySavings = (monthlyBill * usageFactor * 0.8).toFixed(2); // 80% savings
-      const yearlySavings = monthlySavings * 12;
-
-      // Calculate payback period
-      const systemCost = panelCount * 15000 + 30000 + 20000; // Panels + Inverter + Installation
-      const paybackPeriod = (systemCost / yearlySavings).toFixed(1);
-
-      // Generate results
-      const results = document.getElementById('simulationResults');
-      results.innerHTML = `
-        <div class="row">
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-muted">Power Generation</h6>
-                <p><strong>Daily Generation:</strong> ${dailyGeneration.toFixed(2)} kWh</p>
-                <p><strong>Monthly Generation:</strong> ${monthlyGeneration.toFixed(2)} kWh</p>
-                <p><strong>Yearly Generation:</strong> ${yearlyGeneration.toFixed(2)} kWh</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-muted">Financial Analysis</h6>
-                <p><strong>Monthly Savings:</strong> ₱${monthlySavings}</p>
-                <p><strong>Yearly Savings:</strong> ₱${yearlySavings.toFixed(2)}</p>
-                <p><strong>Payback Period:</strong> ${paybackPeriod} years</p>
-                <p><strong>ROI:</strong> ${(100 / paybackPeriod).toFixed(1)}% per year</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="mt-3">
-          <canvas id="generationChart"></canvas>
-        </div>
-      `;
-
-      // Create generation chart
-      const ctx = document.getElementById('generationChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['Daily', 'Monthly', 'Yearly'],
-          datasets: [{
-            label: 'Generation (kWh)',
-            data: [dailyGeneration, monthlyGeneration, yearlyGeneration],
-            backgroundColor: 'rgba(54, 162, 235, 0.5)',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          }
+        // Calculate sun hours based on location
+        let sunHours = 4; // Default to moderate
+        switch(location) {
+          case 'sunny':
+            sunHours = 5; // 5 sun hours
+            break;
+          case 'moderate':
+            sunHours = 4; // 4 sun hours
+            break;
+          case 'cloudy':
+            sunHours = 3; // 3 sun hours
+            break;
         }
-      });
-    });
+
+        // Calculate generation
+        const dailyGeneration = (panelCount * panelWattage * sunHours * (systemEfficiency / 100)) / 1000; // Convert to kWh
+        const monthlyGeneration = dailyGeneration * DAYS_IN_MONTH;
+        const yearlyGeneration = dailyGeneration * DAYS_IN_YEAR;
+
+        // Calculate savings based on usage pattern
+        const usageFactor = USAGE_PATTERN_FACTORS[usagePattern] || 1.0;
+        const monthlySavings = (monthlyBill * usageFactor * 0.8).toFixed(2); // 80% savings
+        const yearlySavings = monthlySavings * 12;
+
+        // Calculate payback period
+        const systemCost = (panelCount * 15000) + 30000 + 20000; // Panels + Inverter + Installation
+        const paybackPeriod = (systemCost / yearlySavings).toFixed(1);
+
+        // Generate results
+        const resultsDiv = document.getElementById('simulationResults');
+        if (resultsDiv) {
+          resultsDiv.innerHTML = `
+            <div class="row">
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">Power Generation</h6>
+                    <p><strong>Daily Generation:</strong> ${dailyGeneration.toFixed(2)} kWh</p>
+                    <p><strong>Monthly Generation:</strong> ${monthlyGeneration.toFixed(2)} kWh</p>
+                    <p><strong>Yearly Generation:</strong> ${yearlyGeneration.toFixed(2)} kWh</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">Financial Analysis</h6>
+                    <p><strong>Monthly Savings:</strong> ₱${monthlySavings}</p>
+                    <p><strong>Yearly Savings:</strong> ₱${yearlySavings.toFixed(2)}</p>
+                    <p><strong>Payback Period:</strong> ${paybackPeriod} years</p>
+                    <p><strong>ROI:</strong> ${(100 / paybackPeriod).toFixed(1)}% per year</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+
+          // Create generation chart
+          if (typeof Chart !== 'undefined') {
+            const chartDiv = document.createElement('div');
+            chartDiv.className = 'mt-3';
+            const canvas = document.createElement('canvas');
+            canvas.id = 'generationChart';
+            chartDiv.appendChild(canvas);
+            resultsDiv.appendChild(chartDiv);
+
+            const ctx = canvas.getContext('2d');
+            new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: ['Daily', 'Monthly', 'Yearly'],
+                datasets: [{
+                  label: 'Generation (kWh)',
+                  data: [dailyGeneration, monthlyGeneration, yearlyGeneration],
+                  backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                  borderColor: 'rgba(54, 162, 235, 1)',
+                  borderWidth: 1
+                }]
+              },
+              options: {
+                responsive: true,
+                scales: {
+                  y: {
+                    beginAtZero: true
+                  }
+                }
+              }
+            });
+          }
+        } else {
+          console.error('Results container not found');
+        }
+      } catch (error) {
+        console.error('Error in simulation:', error);
+        alert('An error occurred while running the simulation. Please check your inputs and try again.');
+      }
+    }
   </script>
 
   <!-- Add Chart.js library -->
