@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Solunar</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <style>
+    .product-popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .popup-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 900px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .popup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .close-popup {
+      font-size: 2rem;
+      cursor: pointer;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .product-card {
+      text-align: center;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    .learn-more {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    .review-form .card {
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .review-form .card-title {
+      color: #2c3e50;
+      font-weight: 600;
+    }
+
+    .review-form .form-control {
+      border-radius: 8px;
+      padding: 0.75rem;
+      border: 1px solid #e0e0e0;
+    }
+
+    .review-form .form-control:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .review-form .form-select {
+      border-radius: 8px;
+      padding: 0.75rem;
+      border: 1px solid #e0e0e0;
+    }
+
+    .review-form .form-select:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .review-form .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .review-form .btn-primary:hover {
+      background-color: #0056b3;
+      border-color: #0056b3;
+    }
+
+    .review-form .btn-secondary {
+      background-color: #6c757d;
+      border-color: #6c757d;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .review-form .btn-secondary:hover {
+      background-color: #5a6268;
+      border-color: #5a6268;
+    }
+
+    #addReviewBtn {
+      background-color: #007bff;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    #addReviewBtn:hover {
+      background-color: #0056b3;
+      transform: translateY(-2px);
+    }
+
+    .star-rating {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .star-rating .stars {
+      display: flex;
+      flex-direction: row-reverse;
+    }
+
+    .star-rating .stars .star {
+      font-size: 2rem;
+      color: #ccc;
+      cursor: pointer;
+    }
+
+    .star-rating .stars .star::before {
+      content: "\2605";
+    }
+
+    .star-rating .stars .star.selected {
+      color: #ffd700;
+    }
+
+    .star-rating .stars .star.hovered {
+      color: #ffd700;
+    }
+
+    .rating-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-left: 1rem;
+    }
+
+    .solar-estimate .card {
+      border: none;
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+
+    .solar-estimate .card-body {
+      padding: 2rem;
+    }
+
+    .solar-estimate h4 {
+      color: #2c3e50;
+      font-weight: 600;
+    }
+
+    .solar-estimate .form-label {
+      font-weight: 500;
+      color: #343a40;
+    }
+
+    .solar-estimate .form-control {
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+    }
+
+    .solar-estimate .form-control:focus {
+      box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+
+    .solar-estimate .input-group-text {
+      background-color: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 0.5rem 0 0 0.5rem;
+    }
+
+    .solar-estimate .btn-primary {
+      padding: 0.75rem 2rem;
+      border-radius: 0.5rem;
+      font-weight: 500;
+    }
+
+    .solar-estimate .list-unstyled li {
+      padding: 1rem 0;
+      border-bottom: 1px solid #e9ecef;
+    }
+
+    .solar-estimate .list-unstyled li:last-child {
+      border-bottom: none;
+    }
+
+    .solar-estimate .bi-check-circle {
+      font-size: 1.25rem;
+    }
+
+    .departments .card {
+      border: none;
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+
+    .departments .card-body {
+      padding: 2rem;
+    }
+
+    .departments h4 {
+      color: #2c3e50;
+      font-weight: 600;
+    }
+
+    .departments .form-label {
+      font-weight: 500;
+      color: #343a40;
+    }
+
+    .departments .form-control {
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+    }
+
+    .departments .form-control:focus {
+      box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+
+    .departments .input-group-text {
+      background-color: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 0.5rem 0 0 0.5rem;
+    }
+
+    .departments .btn-primary {
+      padding: 0.75rem 2rem;
+      border-radius: 0.5rem;
+      font-weight: 500;
+    }
+
+    .departments .list-unstyled li {
+      padding: 1rem 0;
+      border-bottom: 1px solid #e9ecef;
+    }
+
+    .departments .list-unstyled li:last-child {
+      border-bottom: none;
+    }
+
+    .departments .bi-check-circle {
+      font-size: 1.25rem;
+    }
+
+    .departments .badge {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    .departments .nav-tabs {
+      border: none;
+    }
+
+    .departments .nav-link {
+      border: none;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .departments .nav-link:hover {
+      background-color: #f8f9fa;
+    }
+
+    .departments .nav-link.active {
+      background-color: #0d6efd;
+      color: white;
+    }
+  </style>
+
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header sticky-top">
+
+    <div class="branding d-flex align-items-center">
+
+      <div class="container position-relative d-flex align-items-center justify-content-between">
+        <a href="index.html" class="logo d-flex align-items-center me-auto">
+          <!-- Uncomment the line below if you also wish to use an image logo -->
+          <!-- <img src="assets/img/logo.png" alt=""> -->
+          <h1 style="color: black;">MLESS</h1>
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li><a href="#hero" class="active">Home<br></a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#products">Products</a></li>
+            <li><a href="#appointment">Appointment</a></li>
+            <li><a href="#testimonials">Testimonials</a></li>
+            <li><a href="#learn">Learn</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <!--<li class="dropdown"><a href="#"><span>Random Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+              <ul>
+                <li><a href="#">Dropdown 1</a></li>
+                <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                  <ul>
+                    <li><a href="#">Deep Dropdown 1</a></li>
+                    <li><a href="#">Deep Dropdown 2</a></li>
+                    <li><a href="#">Deep Dropdown 3</a></li>
+                    <li><a href="#">Deep Dropdown 4</a></li>
+                    <li><a href="#">Deep Dropdown 5</a></li>
+                  </ul>
+                </li>
+                <li><a href="#">Dropdown 2</a></li>
+                <li><a href="#">Dropdown 3</a></li>
+                <li><a href="#">Dropdown 4</a></li>
+              </ul>
+            </li>-->
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+        <a class="cta-btn d-none d-sm-block" href="#appointment">Make an Appointment</a>
+
+      </div>
+
+    </div>
+
+  </header>
+
+  <main class="main">
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero section light-background">
+
+      <img src="assets/img/hero-bg.png" alt="" data-aos="fade-in">
+
+      <div class="container position-relative">
+
+        <div class="welcome position-relative" data-aos="fade-down" data-aos-delay="100">
+          <h2 style="color: white; text-align: center; margin: 6%;">WELCOME TO MLESS</h2>
+        </div>
+
+        <div class="content row gy-4">
+          <div class="col-lg-4 d-flex align-items-stretch">
+            <div class="why-box" data-aos="zoom-out" data-aos-delay="200">
+              <h3>Why Choose MLESS?</h3>
+              <p style="text-align: justify;">
+               At Mless , we’re passionate about empowering Filipino households and businesses with clean, reliable, and cost-effective solar energy solutions. Located in Taysan, Philippines, we specialize in designing, installing, and maintaining top-tier solar power systems tailored to your needs.
+              </p>
+              <div class="text-center">
+                <a href="#about" class="more-btn"><span>Learn More</span> <i class="bi bi-chevron-right"></i></a>
+              </div>
+            </div>
+          </div><!-- End Why Box -->
+
+          <div class="col-lg-8 d-flex align-items-stretch">
+            <div class="d-flex flex-column justify-content-center">
+              <div class="row gy-4">
+
+                <div class="col-xl-4 d-flex align-items-stretch">
+                  <div class="icon-box" data-aos="zoom-out" data-aos-delay="300">
+                    <i class="bi bi-clipboard-data"></i>
+                    <p>Over 5 years of proven experience in solar installations, with a team trained 
+by TESDA-certified professionals.</p>
+                  </div>
+                </div><!-- End Icon Box -->
+
+                <div class="col-xl-4 d-flex align-items-stretch">
+                  <div class="icon-box" data-aos="zoom-out" data-aos-delay="400">
+                    <i class="bi bi-gem"></i>
+                    <p>Premium Quality
+We use only the best components, including Deye Hybrid Inverters , Lifepo4 batteries , and high-efficiency solar panels tested for Philippine conditions.</p>
+                  </div>
+                </div><!-- End Icon Box -->
+
+                <div class="col-xl-4 d-flex align-items-stretch">
+                  <div class="icon-box" data-aos="zoom-out" data-aos-delay="500">
+                    <i class="bi bi-inboxes"></i>
+                    <p>Honesty & Transparency
+No shortcuts. We provide clear ROI calculations (average 4.7 years ) and ensure systems are designed to maximize lifespan and savings.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div><!-- End  Content-->
+
+      </div>
+
+    </section><!-- /Hero Section -->
+
+    <!-- About Section -->
+    <section id="about" class="about section">
+
+      <div class="container">
+
+        <div class="row gy-4 gx-5">
+
+          <div class="col-lg-6 position-relative align-self-start" data-aos="fade-up" data-aos-delay="200">
+            <img src="assets/img/about.png" class="img-fluid" alt="">
+            <a href="" class="glightbox pulsating-play-btn"></a>
+          </div>
+
+          <div class="col-lg-6 content" data-aos="fade-up" data-aos-delay="100" style="background-image:url('assets/img/')">
+            <h3>About Us</h3>
+            <p>
+In the process of solar installation and services, QUALITY IS EVERYTHING!
+Customer convenience and satisfaction through quality solar power automation are our top priorities.
+We offer the highest quality products and services available in the market.            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+    <!-- End of About Section -->
+
+    <!-- Product Section -->
+    <section id="products" class="products section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Products</h2>
+        <p>Explore our range of high-quality solar products designed for seamless installation and tailored to your energy needs.</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="products-item  position-relative">
+              <div class="icon">
+                <i class="fas fa-solar-panel"></i>
+              </div>
+              <a href="#" class="stretched-link" id="solarPanelLink">
+                <h3>Solar Panels</h3>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="products-item position-relative">
+              <div class="icon">
+                <i class="fas fa-battery"></i>
+              </div>
+              <a href="#" class="stretched-link" id="batteryLink">
+                <h3>Battery</h3>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-3   col-md-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="products-item position-relative">
+              <div class="icon">
+                <i class="fas fa-cogs"></i>
+              </div>
+              <a href="#" class="stretched-link" id="inverterLink">
+                <h3>Inverter</h3>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="products-item position-relative">
+              <div class="icon">
+                <i class="fas fa-gem"></i>
+              </div>
+              <a href="#" class="stretched-link" id="accessoriesLink">
+                <h3>Accesories</h3>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+    <!-- End of Product Section -->
+
+    <!-- Solar Panel Products Popup -->
+    <div id="solarPanelPopup" class="product-popup">
+      <div class="popup-content">
+        <div class="popup-header">
+          <h2>Solar Panel Products</h2>
+          <span class="close-popup">&times;</span>
+        </div>
+        <div class="products-grid">
+          <div class="product-card">
+            <img src="https://via.placeholder.com/200x200" alt="Solar Panel 1">
+            <h3>Premium Solar Panel</h3>
+            <p>High efficiency solar panel with 25-year warranty</p>
+            <button class="learn-more">Learn More</button>
+          </div>
+          <div class="product-card">
+            <img src="https://via.placeholder.com/200x200" alt="Solar Panel 2">
+            <h3>Standard Solar Panel</h3>
+            <p>Cost-effective solution with excellent performance</p>
+            <button class="learn-more">Learn More</button>
+          </div>
+          <div class="product-card">
+            <img src="https://via.placeholder.com/200x200" alt="Solar Panel 3">
+            <h3>Commercial Solar Panel</h3>
+            <p>Designed for large-scale commercial installations</p>
+            <button class="learn-more">Learn More</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Battery Products Popup -->
+    <div id="batteryPopup" class="product-popup">
+      <div class="popup-content">
+        <div class="popup-header">
+          <h2>Battery Products</h2>
+          <span class="close-popup">&times;</span>
+        </div>
+        <div class="products-grid">
+          <div class="product-card">
+            <img src="https://via.placeholder.com/200x200" alt="Battery 1">
+            <h3>Lithium Iron Phosphate (LiFePO4)</h3>
+            <p>Long-lasting, safe, and reliable battery solution</p>
+            <button class="learn-more">Learn More</button>
+          </div>
+          <div class="product-card">
+            <img src="https://via.placeholder.com/200x200" alt="Battery 2">
+            <h3>Deep Cycle AGM</h3>
+            <p>Cost-effective deep cycle battery for solar systems</p>
+            <button class="learn-more">Learn More</button>
+          </div>
+          <div class="product-card">
+            <img src="https://via.placeholder.com/200x200" alt="Battery 3">
+            <h3>Industrial Battery Bank</h3>
+            <p>High-capacity battery solution for large installations</p>
+            <button class="learn-more">Learn More</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inverter Products Popup -->
+    <div id="inverterPopup" class="product-popup">
+      <div class="popup-content">
+        <div class="popup-header">
+          <h2>Inverter Products</h2>
+          <span class="close-popup">&times;</span>
+        </div>
+        <div class="products-grid">
+          <div class="product-card">
+            <img src="https://via.placeholder.com/200x200" alt="Inverter 1">
+            <h3>Hybrid Inverter</h3>
+            <p>Intelligent energy management system</p>
+            <button class="learn-more">Learn More</button>
+          </div>
+          <div class="product-card">
+            <img src="https://via.placeholder.com/200x200" alt="Inverter 2">
+            <h3>Off-Grid Inverter</h3>
+            <p>Perfect for remote locations</p>
+            <button class="learn-more">Learn More</button>
+          </div>
+          <div class="product-card">
+            <img src="https://via.placeholder.com/200x200" alt="Inverter 3">
+            <h3>Grid-Tie Inverter</h3>
+            <p>Efficient grid-connected solution</p>
+            <button class="learn-more">Learn More</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Accessories Products Popup -->
+    <div id="accessoriesPopup" class="product-popup">
+      <div class="popup-content">
+        <div class="popup-header">
+          <h2>Accessories</h2>
+          <span class="close-popup">&times;</span>
+        </div>
+        <div class="products-grid">
+          <div class="product-card">
+            <img src="https://via.placeholder.com/200x200" alt="Accessory 1">
+            <h3>MC4 Connectors</h3>
+            <p>High-quality solar panel connectors</p>
+            <button class="learn-more">Learn More</button>
+          </div>
+          <div class="product-card">
+            <img src="https://via.placeholder.com/200x200" alt="Accessory 2">
+            <h3>Mounting Systems</h3>
+            <p>Durable mounting solutions for all installations</p>
+            <button class="learn-more">Learn More</button>
+          </div>
+          <div class="product-card">
+            <img src="https://via.placeholder.com/200x200" alt="Accessory 3">
+            <h3>Monitoring Systems</h3>
+            <p>Real-time system performance tracking</p>
+            <button class="learn-more">Learn More</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Appointment Section -->
+    <section id="appointment" class="appointment section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Appointment</h2>
+        <p>We'll help you figure out your solar needs!</p>
+      </div><!-- End Section Title -->
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <form action="forms/appointment.php" method="post" role="form" class="php-email-form">
+          <div class="row">
+            <div class="col-md-4 form-group">
+              <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required="">
+            </div>
+            <div class="col-md-4 form-group mt-3 mt-md-0">
+              <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required="">
+            </div>
+            <div class="col-md-4 form-group mt-3 mt-md-0">
+              <input type="tel" class="form-control" name="phone" id="phone" placeholder="Your Phone" required="">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 form-group mt-3">
+              <input type="datetime-local" name="date" class="form-control datepicker" id="date" placeholder="Appointment Date" required="">
+            </div>
+            <div class="col-md-4 form-group mt-3">
+              <select name="appointment" id="appointment" class="form-select" required="">
+                <option value="">Services</option>
+                <option value="cleaning">Cleaning</option>
+                <option value="installation">Installation</option>
+                <option value="repair">Repair</option>
+              </select>
+            </div>
+            <div class="col-md-4 form-group mt-3">
+              <select name="location" class="form-select" required="">
+                <option value="">Location</option>
+                <option value="albay">Albay(Main)</option>
+                <option value="legazpi">Legazpi</option>
+                <option value="daraga">Daraga</option>>
+                <option value="taysan">Taysan</option>
+                <option value="camalig">Camalig</option>>
+                <option value="guinobatan">Guinobatan</option>
+                <option value="ligao">Ligao</option>
+                <option value="polangui">Polangui</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group mt-3">
+            <textarea class="form-control" name="message" rows="5" placeholder="Message (Optional)"></textarea>
+          </div>
+          <div class="mt-3">
+            <div class="loading">Loading</div>
+            <div class="error-message"></div>
+            <div class="sent-message">Your appointment request has been sent successfully. Thank you!</div>
+            <div class="text-center"><button type="submit">Make an Appointment</button></div>
+          </div>
+        </form>
+
+      </div>
+
+    </section>
+    <!-- End of Appointment Section -->
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Testimonials</h2>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="team-member d-flex align-items-start">
+              <div class="member-info">
+                <h4>John Doe</h4>
+                <span>Solar Installation</span>
+                <p>Excellent service! The team was professional and the installation was flawless.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="team-member d-flex align-items-start">
+              <div class="member-info">
+                <h4>Jane Smith</h4>
+                <span>Maintenance</span>
+                <p>Very satisfied with the maintenance service. Highly recommend!</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="team-member d-flex align-items-start">
+              <div class="member-info">
+                <h4>Robert Johnson</h4>
+                <span>Consultation</span>
+                <p>Great consultation service. Helped me understand my solar needs perfectly.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="400">
+            <div class="team-member d-flex align-items-start">
+              <div class="member-info">
+                <h4>Sarah Wilson</h4>
+                <span>System Repair</span>
+                <p>Quick and efficient repair service. Fixed my system in no time!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Review Form -->
+        <div class="review-form mb-5 mt-5">
+          <div class="row justify-content-center">
+            <div class="col-lg-12">
+              <div class="card shadow-sm">
+                <div class="card-body p-4">
+                  <h4 class="card-title mb-4">Share Your Experience</h4>
+                  <form action="forms/review.php" method="post" class="php-email-form">
+                    <div class="row">
+                      <div class="col-md-6 form-group mb-3">
+                        <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
+                      </div>
+                      <div class="col-md-6 form-group mb-3">
+                        <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
+                      </div>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                      <textarea class="form-control" name="review" rows="5" placeholder="Write your review here..." required></textarea>
+                    </div>
+                    <div class="form-group mb-3">
+                      <select name="service" class="form-select" required>
+                        <option value="">Select Service</option>
+                        <option value="installation">Solar Panel Installation</option>
+                        <option value="maintenance">Maintenance</option>
+                        <option value="repair">Repair Services</option>
+                        <option value="consultation">Consultation</option>
+                      </select>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                      <button type="reset" class="btn btn-secondary">
+                        <i class="bi bi-x-circle"></i> Reset
+                      </button>
+                      <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-send"></i> Submit Review
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Learn Section -->
+    <section id="learn" class="learn section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Learn</h2>
+        <p>Explore our interactive solar tools and simulations to better understand solar energy</p>
+      </div>
+      <!-- End Section Title -->
+
+      <div class="container">
+        <div class="row">
+          <!-- Solar Calculator -->
+          <div class="col-lg-4 mb-4">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">Solar Calculator</h5>
+                <p class="card-text">Calculate your potential solar savings and system requirements</p>
+                <form id="solarCalculatorForm">
+                  <div class="mb-3">
+                    <label for="monthlyBill" class="form-label">Monthly Electricity Bill (₱)</label>
+                    <input type="number" class="form-control" id="monthlyBill" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="backupDays" class="form-label">Backup Days</label>
+                    <input type="number" class="form-control" id="backupDays" value="3" required>
+                    <small class="text-muted">Number of days of backup power needed</small>
+                  </div>
+                  <div class="mb-3">
+                    <label for="backupHours" class="form-label">Backup Hours per Day</label>
+                    <input type="number" class="form-control" id="backupHours" value="8" required>
+                    <small class="text-muted">Number of hours of backup power needed per day</small>
+                  </div>
+                  <div class="mb-3">
+                    <label for="location" class="form-label">Location</label>
+                    <select class="form-select" id="location" required>
+                      <option value="">Select Location</option>
+                      <option value="sunny">Sunny Region</option>
+                      <option value="moderate">Moderate Region</option>
+                      <option value="cloudy">Cloudy Region</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Calculate</button>
+                </form>
+                <div id="calculatorResults" class="mt-3"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Solar Estimation -->
+          <div class="col-lg-4 mb-4">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">Solar Estimation</h5>
+                <p class="card-text">Estimate your solar panel requirements</p>
+                <form id="solarEstimateForm">
+                  <div class="mb-3">
+                    <label for="roofArea" class="form-label">Roof Area (sqm)</label>
+                    <input type="number" class="form-control" id="roofArea" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="usageHours" class="form-label">Daily Usage Hours</label>
+                    <input type="number" class="form-control" id="usageHours" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="systemType" class="form-label">System Type</label>
+                    <select class="form-select" id="systemType" required>
+                      <option value="">Select System</option>
+                      <option value="grid-tied">Grid-Tied</option>
+                      <option value="off-grid">Off-Grid</option>
+                      <option value="hybrid">Hybrid</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Estimate System</button>
+                </form>
+                <div id="estimateResults" class="mt-3"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Solar Power Simulation -->
+          <div class="col-lg-4 mb-4">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">Solar Power Simulation</h5>
+                <p class="card-text">Simulate your solar power generation</p>
+                <div class="mb-3">
+                  <label for="panelCount" class="form-label">Number of Panels</label>
+                  <input type="number" class="form-control" id="panelCount" value="10">
+                </div>
+                <div class="mb-3">
+                  <label for="panelWattage" class="form-label">Panel Wattage (W)</label>
+                  <input type="number" class="form-control" id="panelWattage" value="300">
+                </div>
+                <div class="mb-3">
+                  <label for="sunHours" class="form-label">Daily Sun Hours</label>
+                  <input type="number" class="form-control" id="sunHours" value="5">
+                </div>
+                <div class="mb-3">
+                  <label for="efficiency" class="form-label">System Efficiency (%)</label>
+                  <input type="number" class="form-control" id="efficiency" value="85">
+                </div>
+                <button onclick="runSimulation()" class="btn btn-primary">Run Simulation</button>
+                <div id="simulationResults" class="mt-3"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+    <!-- End of Learn Section -->
+
+    <!-- Faq Section -->
+    <section id="faq" class="faq section light-background">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Frequently Asked Questions</h2>
+        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="row justify-content-center">
+
+          <div class="col-lg-10" data-aos="fade-up" data-aos-delay="100">
+
+            <div class="faq-container">
+
+              <div class="faq-item faq-active">
+                <h3>Non consectetur a erat nam at lectus urna duis?</h3>
+                <div class="faq-content">
+                  <p>Feugiat pretium nibh ipsum consequat. Tempus iaculis urna id volutpat lacus laoreet non curabitur gravida. Venenatis lectus magna fringilla urna porttitor rhoncus dolor purus non.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div><!-- End Faq item-->
+
+              <div class="faq-item">
+                <h3>Feugiat scelerisque varius morbi enim nunc faucibus?</h3>
+                <div class="faq-content">
+                  <p>Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit ullamcorper dignissim. Mauris ultrices eros in cursus turpis massa tincidunt dui.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div><!-- End Faq item-->
+
+              <div class="faq-item">
+                <h3>Dolor sit amet consectetur adipiscing elit pellentesque?</h3>
+                <div class="faq-content">
+                  <p>Eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci. Faucibus pulvinar elementum integer enim. Sem nulla pharetra diam sit amet nisl suscipit. Rutrum tellus pellentesque eu tincidunt. Lectus urna duis convallis convallis tellus. Urna molestie at elementum eu facilisis sed odio morbi quis</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div><!-- End Faq item-->
+
+              <div class="faq-item">
+                <h3>Ac odio tempor orci dapibus. Aliquam eleifend mi in nulla?</h3>
+                <div class="faq-content">
+                  <p>Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit ullamcorper dignissim. Mauris ultrices eros in cursus turpis massa tincidunt dui.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div><!-- End Faq item-->
+
+              <div class="faq-item">
+                <h3>Tempus quam pellentesque nec nam aliquam sem et tortor?</h3>
+                <div class="faq-content">
+                  <p>Molestie a iaculis at erat pellentesque adipiscing commodo. Dignissim suspendisse in est ante in. Nunc vel risus commodo viverra maecenas accumsan. Sit amet nisl suscipit adipiscing bibendum est. Purus gravida quis blandit turpis cursus in</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div><!-- End Faq item-->
+
+              <div class="faq-item">
+                <h3>Perspiciatis quod quo quos nulla quo illum ullam?</h3>
+                <div class="faq-content">
+                  <p>Enim ea facilis quaerat voluptas quidem et dolorem. Quis et consequatur non sed in suscipit sequi. Distinctio ipsam dolore et.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div><!-- End Faq item-->
+
+            </div>
+
+          </div><!-- End Faq Column-->
+
+        </div>
+
+      </div>
+
+    </section><!-- /Faq Section -->
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Contact</h2>
+        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+      </div><!-- End Section Title -->
+
+      <div class="mb-5" data-aos="fade-up" data-aos-delay="200">
+        <iframe style="border:0; width: 100%; height: 270px;" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d48389.78314118045!2d-74.006138!3d40.710059!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a22a3bda30d%3A0xb89d1fe6bc499443!2sDowntown%20Conference%20Center!5e0!3m2!1sen!2sus!4v1676961268712!5m2!1sen!2sus" frameborder="0" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div><!-- End Google Maps -->
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-4">
+            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="300">
+              <i class="bi bi-geo-alt flex-shrink-0"></i>
+              <div>
+                <h3>Location</h3>
+                <p>A108 Adam Street, New York, NY 535022</p>
+              </div>
+            </div><!-- End Info Item -->
+
+            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
+              <i class="bi bi-telephone flex-shrink-0"></i>
+              <div>
+                <h3>Call Us</h3>
+                <p>+1 5589 55488 55</p>
+              </div>
+            </div><!-- End Info Item -->
+
+            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="500">
+              <i class="bi bi-envelope flex-shrink-0"></i>
+              <div>
+                <h3>Email Us</h3>
+                <p>info@example.com</p>
+              </div>
+            </div><!-- End Info Item -->
+
+          </div>
+
+          <div class="col-lg-8">
+            <form action="forms/contact.php" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+              <div class="row gy-4">
+
+                <div class="col-md-6">
+                  <input type="text" name="name" class="form-control" placeholder="Your Name" required="">
+                </div>
+
+                <div class="col-md-6 ">
+                  <input type="email" class="form-control" name="email" placeholder="Your Email" required="">
+                </div>
+
+                <div class="col-md-12">
+                  <input type="text" class="form-control" name="subject" placeholder="Subject" required="">
+                </div>
+
+                <div class="col-md-12">
+                  <textarea class="form-control" name="message" rows="6" placeholder="Message" required=""></textarea>
+                </div>
+
+                <div class="col-md-12 text-center">
+                  <div class="loading">Loading</div>
+                  <div class="error-message"></div>
+                  <div class="sent-message">Your message has been sent. Thank you!</div>
+
+                  <button type="submit">Send Message</button>
+                </div>
+
+              </div>
+            </form>
+          </div><!-- End Contact Form -->
+
+        </div>
+
+      </div>
+
+    </section><!-- /Contact Section -->
+
+  </main>
+
+  <footer id="footer" class="footer light-background">
+
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-4 col-md-6 footer-about">
+          <a href="index.html" class="logo d-flex align-items-center">
+            <span class="sitename">MLess</span>
+          </a>
+          <div class="footer-contact pt-3">
+            <p>ALbay, Philippines</p>
+            <p>Legazpi City, Albay</p>
+            <p class="mt-3"><strong>Phone:</strong> <span>+63X XXXXX XXXX</span></p>
+            <p><strong>Email:</strong> <span>sampleMail@example.com</span></p>
+          </div>
+          <div class="social-links d-flex mt-4">
+            <a href=""><i class="bi bi-twitter-x"></i></a>
+            <a href=""><i class="bi bi-facebook"></i></a>
+            <a href=""><i class="bi bi-instagram"></i></a>
+            <a href=""><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Useful Links</h4>
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About us</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Terms of service</a></li>
+            <li><a href="#">Privacy policy</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Our Services</h4>
+          <ul>
+            <li><a href="#">Web Design</a></li>
+            <li><a href="#">Web Development</a></li>
+            <li><a href="#">Product Management</a></li>
+            <li><a href="#">Marketing</a></li>
+            <li><a href="#">Graphic Design</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Hic solutasetp</h4>
+          <ul>
+            <li><a href="#">Molestiae accusamus iure</a></li>
+            <li><a href="#">Excepturi dignissimos</a></li>
+            <li><a href="#">Suscipit distinctio</a></li>
+            <li><a href="#">Dilecta</a></li>
+            <li><a href="#">Sit quas consectetur</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Nobis illum</h4>
+          <ul>
+            <li><a href="#">Ipsam</a></li>
+            <li><a href="#">Laudantium dolorum</a></li>
+            <li><a href="#">Dinera</a></li>
+            <li><a href="#">Trodelas</a></li>
+            <li><a href="#">Flexo</a></li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="container copyright text-center mt-4">
+      <p> <span>Copyright</span> <strong class="px-1 sitename">MLESS</strong> <span>All Rights Reserved</span></p>
+      <div class="credits">
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const solarPanelLink = document.getElementById('solarPanelLink');
+      const solarPanelPopup = document.getElementById('solarPanelPopup');
+      const batteryLink = document.getElementById('batteryLink');
+      const batteryPopup = document.getElementById('batteryPopup');
+      const inverterLink = document.getElementById('inverterLink');
+      const inverterPopup = document.getElementById('inverterPopup');
+      const accessoriesLink = document.getElementById('accessoriesLink');
+      const accessoriesPopup = document.getElementById('accessoriesPopup');
+      const closeButtons = document.querySelectorAll('.close-popup');
+
+      solarPanelLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        solarPanelPopup.style.display = 'flex';
+      });
+
+      batteryLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        batteryPopup.style.display = 'flex';
+      });
+
+      inverterLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        inverterPopup.style.display = 'flex';
+      });
+
+      accessoriesLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        accessoriesPopup.style.display = 'flex';
+      });
+
+      closeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const popup = this.closest('.product-popup');
+          popup.style.display = 'none';
+        });
+      });
+
+      document.querySelectorAll('.product-popup').forEach(popup => {
+        popup.addEventListener('click', function(e) {
+          if (e.target === popup) {
+            popup.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const addReviewBtn = document.getElementById('addReviewBtn');
+      const reviewForm = document.getElementById('reviewForm');
+      const closeReviewForm = document.getElementById('closeReviewForm');
+
+      addReviewBtn.addEventListener('click', function() {
+        reviewForm.style.display = 'block';
+        this.style.display = 'none';
+      });
+
+      closeReviewForm.addEventListener('click', function() {
+        reviewForm.style.display = 'none';
+        addReviewBtn.style.display = 'block';
+      });
+
+      // Reset form on close
+      closeReviewForm.addEventListener('click', function() {
+        const form = reviewForm.querySelector('form');
+        if (form) {
+          form.reset();
+        }
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const stars = document.querySelectorAll('.star-rating .stars .star');
+      const ratingValue = document.querySelector('.star-rating .rating-value');
+      const ratingInput = document.querySelector('.star-rating input[name="rating"]');
+
+      stars.forEach(star => {
+        star.addEventListener('click', function() {
+          const value = parseInt(this.getAttribute('data-value'));
+          ratingInput.value = value;
+          ratingValue.textContent = `${value}/5`;
+          
+          // Remove selected class from all stars
+          stars.forEach(s => s.classList.remove('selected'));
+          
+          // Add selected class to all stars up to and including the selected one
+          stars.forEach(s => {
+            if (value === 5) {
+              // If rating is 5, select all stars
+              s.classList.add('selected');
+            } else if (parseInt(s.getAttribute('data-value')) <= value) {
+              // For other ratings, select up to the selected value
+              s.classList.add('selected');
+            }
+          });
+        });
+
+        star.addEventListener('mouseenter', function() {
+          const value = parseInt(this.getAttribute('data-value'));
+          stars.forEach(s => s.classList.remove('hovered'));
+          
+          // Add hovered class to all stars up to and including the hovered one
+          stars.forEach(s => {
+            if (parseInt(s.getAttribute('data-value')) <= value) {
+              s.classList.add('hovered');
+            }
+          });
+        });
+
+        star.addEventListener('mouseleave', function() {
+          stars.forEach(s => s.classList.remove('hovered'));
+        });
+      });
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('solarEstimateForm');
+      
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Validate form
+        if (!form.checkValidity()) {
+          e.stopPropagation();
+          return;
+        }
+
+        // Get form data
+        const formData = {
+          propertyType: document.getElementById('propertyType').value,
+          roofType: document.getElementById('roofType').value,
+          monthlyBill: document.getElementById('monthlyBill').value,
+          usageHours: document.getElementById('usageHours').value,
+          systemType: document.getElementById('systemType').value,
+          backupHours: document.getElementById('backupHours').value,
+        };
+
+        // Here you would typically send the data to your server
+        console.log('Form submitted:', formData);
+
+        // Show success message
+        alert('Thank you! We will contact you shortly with your solar estimate.');
+        form.reset();
+      });
+
+      // Add form validation
+      form.classList.add('was-validated');
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const solarCalculatorForm = document.getElementById('solarCalculatorForm');
+      
+      solarCalculatorForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Validate form
+        if (!solarCalculatorForm.checkValidity()) {
+          e.stopPropagation();
+          return;
+        }
+
+        // Get form data
+        const monthlyBill = parseFloat(document.getElementById('monthlyBill').value);
+        const backupDays = parseFloat(document.getElementById('backupDays').value);
+        const backupHours = parseFloat(document.getElementById('backupHours').value);
+        const location = document.getElementById('location').value;
+        
+        // Constants
+        const DAYS_IN_MONTH = 30;
+        const PANEL_WATTAGE = 300; // Average panel wattage
+        const PANEL_AREA = 2; // Average panel area in sqm
+        const SYSTEM_EFFICIENCY = 0.85;
+
+        // Calculate daily usage
+        const dailyUsage = (monthlyBill / DAYS_IN_MONTH) * 1000; // Convert to Wh
+
+        // Calculate backup power requirements
+        const backupPower = dailyUsage * backupDays;
+        const backupBatteryCapacity = backupPower * backupHours;
+
+        // Calculate system size based on location
+        let dailyGeneration = 0;
+        let requiredPanels = 0;
+        let systemCost = 0;
+
+        switch(location) {
+          case 'sunny':
+            dailyGeneration = PANEL_WATTAGE * 5 * SYSTEM_EFFICIENCY; // 5 sun hours
+            break;
+          case 'moderate':
+            dailyGeneration = PANEL_WATTAGE * 4 * SYSTEM_EFFICIENCY; // 4 sun hours
+            break;
+          case 'cloudy':
+            dailyGeneration = PANEL_WATTAGE * 3 * SYSTEM_EFFICIENCY; // 3 sun hours
+            break;
+        }
+
+        // Calculate required panels
+        requiredPanels = Math.ceil(dailyUsage / dailyGeneration);
+        
+        // Calculate system cost
+        const panelCost = 200; // Approximate cost per panel
+        const inverterCost = 1000; // Approximate inverter cost
+        const installationCost = 500; // Approximate installation cost
+        
+        systemCost = (requiredPanels * panelCost) + inverterCost + installationCost;
+
+        // Calculate payback period
+        const annualSavings = monthlyBill * 12 * 0.8; // 80% savings
+        const paybackPeriod = systemCost / annualSavings;
+
+        const results = document.getElementById('calculatorResults');
+        results.innerHTML = `
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2 text-muted">System Requirements</h6>
+              <p><strong>Daily Usage:</strong> ${dailyUsage.toFixed(2)} Wh</p>
+              <p><strong>Required Panels:</strong> ${requiredPanels}</p>
+              <p><strong>System Area:</strong> ${requiredPanels * PANEL_AREA} sqm</p>
+              <p><strong>Battery Capacity:</strong> ${backupBatteryCapacity.toFixed(2)} Wh</p>
+            </div>
+          </div>
+          <div class="card mt-3">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2 text-muted">Financial Analysis</h6>
+              <p><strong>System Cost:</strong> ₱${systemCost.toFixed(2)}</p>
+              <p><strong>Annual Savings:</strong> ₱${annualSavings.toFixed(2)}</p>
+              <p><strong>Payback Period:</strong> ${paybackPeriod.toFixed(1)} years</p>
+            </div>
+          </div>
+        `;
+      });
+
+      // Add form validation
+      solarCalculatorForm.classList.add('was-validated');
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('solarEstimateForm');
+      
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Validate form
+        if (!form.checkValidity()) {
+          e.stopPropagation();
+          return;
+        }
+
+        // Get form data
+        const formData = {
+          propertyType: document.getElementById('propertyType').value,
+          roofType: document.getElementById('roofType').value,
+          monthlyBill: document.getElementById('monthlyBill').value,
+          usageHours: document.getElementById('usageHours').value,
+          systemType: document.getElementById('systemType').value,
+          backupHours: document.getElementById('backupHours').value,
+        };
+
+        // Here you would typically send the data to your server
+        console.log('Form submitted:', formData);
+
+        // Show success message
+        alert('Thank you! We will contact you shortly with your solar estimate.');
+        form.reset();
+      });
+
+      // Add form validation
+      form.classList.add('was-validated');
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const solarEstimateForm = document.getElementById('solarEstimateForm');
+      
+      solarEstimateForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Validate form
+        if (!solarEstimateForm.checkValidity()) {
+          e.stopPropagation();
+          return;
+        }
+
+        // Get form data
+        const roofArea = parseFloat(document.getElementById('roofArea').value);
+        const usageHours = parseFloat(document.getElementById('usageHours').value);
+        const systemType = document.getElementById('systemType').value;
+
+        let panelCount = Math.ceil(roofArea / 2); // Approximate 2 sqm per panel
+        let batteryCapacity = 0;
+
+        if (systemType === 'off-grid') {
+          batteryCapacity = usageHours * 300; // 300W per panel
+        }
+
+        const results = document.getElementById('estimateResults');
+        results.innerHTML = `
+          <p><strong>Recommended Panels:</strong> ${panelCount}</p>
+          ${systemType === 'off-grid' ? `<p><strong>Battery Capacity:</strong> ${batteryCapacity}Wh</p>` : ''}
+        `;
+      });
+
+      // Add form validation
+      solarEstimateForm.classList.add('was-validated');
+    });
+  </script>
+
+  <script>
+    function runSimulation() {
+      const panelCount = parseFloat(document.getElementById('panelCount').value);
+      const panelWattage = parseFloat(document.getElementById('panelWattage').value);
+      const sunHours = parseFloat(document.getElementById('sunHours').value);
+      const efficiency = parseFloat(document.getElementById('efficiency').value) / 100;
+
+      const dailyGeneration = panelCount * panelWattage * sunHours * efficiency;
+      const monthlyGeneration = dailyGeneration * 30;
+      const yearlyGeneration = dailyGeneration * 365;
+
+      const results = document.getElementById('simulationResults');
+      results.innerHTML = `
+        <p><strong>Daily Generation:</strong> ${dailyGeneration.toFixed(2)} kWh</p>
+        <p><strong>Monthly Generation:</strong> ${monthlyGeneration.toFixed(2)} kWh</p>
+        <p><strong>Yearly Generation:</strong> ${yearlyGeneration.toFixed(2)} kWh</p>
+      `;
+    }
+  </script>
+
+</body>
+
+</html>
