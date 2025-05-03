@@ -36,6 +36,75 @@
       left: 0;
       width: 100%;
       height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .popup-content {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 800px;
+      width: 90%;
+    }
+
+    .popup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .close-popup {
+      cursor: pointer;
+      font-size: 1.5rem;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .product-card {
+      text-align: center;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .product-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .product-actions .btn {
+      flex: 1;
+    }
+
+    .product-actions .learn-more {
+      background: none;
+      border: 1px solid #000;
+      color: #000;
+    }
+
+    .product-popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       background: rgba(0, 0, 0, 0.8);
       z-index: 1000;
       justify-content: center;
@@ -333,6 +402,20 @@
       background-color: #0d6efd;
       color: white;
     }
+
+    .product-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .product-actions .btn {
+      flex: 1;
+    }
+    .product-actions .learn-more {
+      background: none;
+      border: 1px solid #000;
+      color: #000;
+    }
   </style>
 
 </head>
@@ -382,6 +465,13 @@
         </nav>
 
         <a class="cta-btn d-none d-sm-block" href="#appointment">Make an Appointment</a>
+
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#cartModal">
+            <i class="bi bi-cart"></i>
+            <span class="badge bg-primary cart-count">0</span>
+          </a>
+        </div>
 
       </div>
 
@@ -523,10 +613,10 @@ We offer the highest quality products and services available in the market.     
             </div>
           </div>
 
-          <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+          <div class="col-lg-3   col-md-6" data-aos="fade-up" data-aos-delay="400">
             <div class="products-item position-relative">
               <div class="icon">
-                <i class="fas fa-gem"></i>
+                <i class="fas fa-tools"></i>
               </div>
               <a href="#" class="stretched-link" id="accessoriesLink">
                 <h3>Accesories</h3>
@@ -542,30 +632,54 @@ We offer the highest quality products and services available in the market.     
     <!-- End of Product Section -->
 
     <!-- Solar Panel Products Popup -->
-    <div id="solarPanelPopup" class="product-popup">
+    <div id="solarPanelPopup" class="product-popup" style="display: none;">
       <div class="popup-content">
         <div class="popup-header">
           <h2>Solar Panel Products</h2>
-          <span class="close-popup">&times;</span>
+          <span class="close-popup">×</span>
         </div>
         <div class="products-grid">
           <div class="product-card">
             <img src="https://via.placeholder.com/200x200" alt="Solar Panel 1">
             <h3>Premium Solar Panel</h3>
             <p>High efficiency solar panel with 25-year warranty</p>
-            <button class="learn-more">Learn More</button>
+            <div class="product-actions">
+              <button class="learn-more">Learn More</button>
+              <button class="btn btn-primary add-to-cart" 
+                      data-product-id="101" 
+                      data-product-name="Premium Solar Panel" 
+                      data-product-price="15000">
+                Add to Cart
+              </button>
+            </div>
           </div>
           <div class="product-card">
             <img src="https://via.placeholder.com/200x200" alt="Solar Panel 2">
             <h3>Standard Solar Panel</h3>
             <p>Cost-effective solution with excellent performance</p>
-            <button class="learn-more">Learn More</button>
+            <div class="product-actions">
+              <button class="learn-more">Learn More</button>
+              <button class="btn btn-primary add-to-cart" 
+                      data-product-id="102" 
+                      data-product-name="Standard Solar Panel" 
+                      data-product-price="12000">
+                Add to Cart
+              </button>
+            </div>
           </div>
           <div class="product-card">
             <img src="https://via.placeholder.com/200x200" alt="Solar Panel 3">
             <h3>Commercial Solar Panel</h3>
             <p>Designed for large-scale commercial installations</p>
-            <button class="learn-more">Learn More</button>
+            <div class="product-actions">
+              <button class="learn-more">Learn More</button>
+              <button class="btn btn-primary add-to-cart" 
+                      data-product-id="103" 
+                      data-product-name="Commercial Solar Panel" 
+                      data-product-price="20000">
+                Add to Cart
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -677,9 +791,11 @@ We offer the highest quality products and services available in the market.     
             <div class="col-md-4 form-group">
               <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required="">
             </div>
+
             <div class="col-md-4 form-group mt-3 mt-md-0">
               <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required="">
             </div>
+
             <div class="col-md-4 form-group mt-3 mt-md-0">
               <input type="tel" class="form-control" name="phone" id="phone" placeholder="Your Phone" required="">
             </div>
@@ -842,42 +958,9 @@ We offer the highest quality products and services available in the market.     
               <div class="card-body">
                 <h5 class="card-title">Solar Calculator</h5>
                 <p class="card-text">Calculate your potential solar savings and system requirements</p>
-                <form id="solarCalculatorForm">
-                  <div class="mb-3">
-                    <label for="monthlyBill" class="form-label">Monthly Electricity Bill (₱)</label>
-                    <input type="number" class="form-control" id="monthlyBill" required>
-                  </div>
-                  <div class="mb-3">
-                    <label for="backupDays" class="form-label">Backup Days</label>
-                    <input type="number" class="form-control" id="backupDays" value="3" required>
-                    <small class="text-muted">Number of days of backup power needed</small>
-                  </div>
-                  <div class="mb-3">
-                    <label for="backupHours" class="form-label">Backup Hours per Day</label>
-                    <input type="number" class="form-control" id="backupHours" value="8" required>
-                    <small class="text-muted">Number of hours of backup power needed per day</small>
-                  </div>
-                  <div class="mb-3">
-                    <label for="location" class="form-label">Location</label>
-                    <select class="form-select" id="location" required>
-                      <option value="">Select Location</option>
-                      <option value="sunny">Sunny Region</option>
-                      <option value="moderate">Moderate Region</option>
-                      <option value="cloudy">Cloudy Region</option>
-                    </select>
-                  </div>
-                  <div class="mb-3">
-                    <label for="systemType" class="form-label">System Type</label>
-                    <select class="form-select" id="systemType" required>
-                      <option value="">Select System Type</option>
-                      <option value="grid-tied">Grid-Tied System</option>
-                      <option value="off-grid">Off-Grid System</option>
-                    </select>
-                    <small class="text-muted">Choose between grid-tied or off-grid system</small>
-                  </div>
-                  <button type="submit" class="btn btn-primary">Calculate</button>
-                </form>
-                <div id="calculatorResults" class="mt-3"></div>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#solarCalculatorModal">
+                  Calculate Solar Power
+                </button>
               </div>
             </div>
           </div>
@@ -888,27 +971,9 @@ We offer the highest quality products and services available in the market.     
               <div class="card-body">
                 <h5 class="card-title">Solar Estimation</h5>
                 <p class="card-text">Estimate your solar panel requirements</p>
-                <form id="solarEstimateForm">
-                  <div class="mb-3">
-                    <label for="roofArea" class="form-label">Roof Area (sqm)</label>
-                    <input type="number" class="form-control" id="roofArea" required>
-                  </div>
-                  <div class="mb-3">
-                    <label for="usageHours" class="form-label">Daily Usage Hours</label>
-                    <input type="number" class="form-control" id="usageHours" required>
-                  </div>
-                  <div class="mb-3">
-                    <label for="systemType" class="form-label">System Type</label>
-                    <select class="form-select" id="systemType" required>
-                      <option value="">Select System</option>
-                      <option value="grid-tied">Grid-Tied</option>
-                      <option value="off-grid">Off-Grid</option>
-                      <option value="hybrid">Hybrid</option>
-                    </select>
-                  </div>
-                  <button type="submit" class="btn btn-primary">Estimate System</button>
-                </form>
-                <div id="estimateResults" class="mt-3"></div>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#solarEstimateModal">
+                  Estimate Solar System
+                </button>
               </div>
             </div>
           </div>
@@ -918,54 +983,10 @@ We offer the highest quality products and services available in the market.     
             <div class="card h-100">
               <div class="card-body">
                 <h5 class="card-title">Solar Power Simulation</h5>
-                <p class="card-text">Simulate your solar power generation and savings</p>
-                
-                <!-- System Configuration -->
-                <div class="mb-3">
-                  <label for="panelCount" class="form-label">Number of Panels</label>
-                  <input type="number" class="form-control" id="panelCount" value="10" required>
-                  <small class="text-muted">Number of solar panels in your system</small>
-                </div>
-                <div class="mb-3">
-                  <label for="panelWattage" class="form-label">Panel Wattage (W)</label>
-                  <select class="form-select" id="panelWattage" required>
-                    <option value="250">250W (Standard)</option>
-                    <option value="300">300W (Premium)</option>
-                    <option value="350">350W (High-Efficiency)</option>
-                    <option value="400">400W (Ultra-Efficient)</option>
-                  </select>
-                  <small class="text-muted">Select your panel wattage</small>
-                </div>
-                <div class="mb-3">
-                  <label for="location" class="form-label">Location</label>
-                  <select class="form-select" id="location" required>
-                    <option value="sunny">Sunny Region (5 sun hours)</option>
-                    <option value="moderate">Moderate Region (4 sun hours)</option>
-                    <option value="cloudy">Cloudy Region (3 sun hours)</option>
-                  </select>
-                  <small class="text-muted">Select your location to estimate sun hours</small>
-                </div>
-                <div class="mb-3">
-                  <label for="systemEfficiency" class="form-label">System Efficiency (%)</label>
-                  <input type="number" class="form-control" id="systemEfficiency" value="85" required>
-                  <small class="text-muted">Typical efficiency: 80-90%</small>
-                </div>
-                <div class="mb-3">
-                  <label for="monthlyBill" class="form-label">Monthly Electricity Bill (₱)</label>
-                  <input type="number" class="form-control" id="monthlyBill" value="1000" required>
-                  <small class="text-muted">Your current monthly electricity bill</small>
-                </div>
-                <div class="mb-3">
-                  <label for="usagePattern" class="form-label">Usage Pattern</label>
-                  <select class="form-select" id="usagePattern" required>
-                    <option value="even">Even Usage (Day/Night)</option>
-                    <option value="day-heavy">Day Heavy (70% Day)</option>
-                    <option value="night-heavy">Night Heavy (70% Night)</option>
-                  </select>
-                  <small class="text-muted">Select your typical usage pattern</small>
-                </div>
-                <button onclick="runSimulation()" class="btn btn-primary">Run Simulation</button>
-                <div id="simulationResults" class="mt-3"></div>
+                <p class="card-text">Simulate your solar power generation</p>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#solarSimulationModal">
+                  Run Simulation
+                </button>
               </div>
             </div>
           </div>
@@ -974,6 +995,174 @@ We offer the highest quality products and services available in the market.     
 
     </section>
     <!-- End of Learn Section -->
+
+    <!-- Solar Calculator Modal -->
+    <div class="modal fade" id="solarCalculatorModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Solar Power Calculator</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="solarCalculatorForm">
+              <div class="mb-3">
+                <label for="calculatorMonthlyBill" class="form-label">Monthly Electricity Bill (₱)</label>
+                <input type="number" class="form-control" id="calculatorMonthlyBill" required>
+              </div>
+              <div class="mb-3">
+                <label for="calculatorBackupDays" class="form-label">Backup Days</label>
+                <input type="number" class="form-control" id="calculatorBackupDays" value="3" required>
+                <small class="text-muted">Number of days of backup power needed</small>
+              </div>
+              <div class="mb-3">
+                <label for="calculatorBackupHours" class="form-label">Backup Hours per Day</label>
+                <input type="number" class="form-control" id="calculatorBackupHours" value="8" required>
+                <small class="text-muted">Number of hours of backup power needed per day</small>
+              </div>
+              <div class="mb-3">
+                <label for="calculatorLocation" class="form-label">Location</label>
+                <select class="form-select" id="calculatorLocation" required>
+                  <option value="">Select Location</option>
+                  <option value="sunny">Sunny Region</option>
+                  <option value="moderate">Moderate Region</option>
+                  <option value="cloudy">Cloudy Region</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="calculatorSystemType" class="form-label">System Type</label>
+                <select class="form-select" id="calculatorSystemType" required>
+                  <option value="">Select System Type</option>
+                  <option value="grid-tied">Grid-Tied System</option>
+                  <option value="off-grid">Off-Grid System</option>
+                </select>
+                <small class="text-muted">Choose between grid-tied or off-grid system</small>
+              </div>
+              <button type="submit" class="btn btn-primary">Calculate</button>
+            </form>
+            <div id="calculatorResults" class="mt-3"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Solar Estimation Modal -->
+    <div class="modal fade" id="solarEstimateModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Solar System Estimator</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="solarEstimateForm">
+              <div class="mb-3">
+                <label for="estimateMonthlyBill" class="form-label">Monthly Electricity Bill (₱)</label>
+                <input type="number" class="form-control" id="estimateMonthlyBill" min="0" required>
+              </div>
+              <div class="mb-3">
+                <label for="estimateRoofArea" class="form-label">Available Roof Area (sqm)</label>
+                <input type="number" class="form-control" id="estimateRoofArea" min="0" required>
+              </div>
+              <div class="mb-3">
+                <label for="estimateUsageHours" class="form-label">Average Daily Usage Hours</label>
+                <input type="number" class="form-control" id="estimateUsageHours" min="0" max="24" required>
+              </div>
+              <div class="mb-3">
+                <label for="estimateLocation" class="form-label">Location</label>
+                <select class="form-select" id="estimateLocation" required>
+                  <option value="">Select Location</option>
+                  <option value="low">Metro Manila</option>
+                  <option value="moderate">Cebu, Davao</option>
+                  <option value="high">Baguio, Tagaytay</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="estimateSystemType" class="form-label">System Type</label>
+                <select class="form-select" id="estimateSystemType" required>
+                  <option value="">Select System</option>
+                  <option value="grid-tied">Grid-Tied</option>
+                  <option value="off-grid">Off-Grid</option>
+                  <option value="hybrid">Hybrid</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary">Estimate System</button>
+            </form>
+            <div id="estimateResults" class="mt-3"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Solar Power Simulation Modal -->
+    <div class="modal fade" id="solarSimulationModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Solar Power Simulation</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="simulationForm">
+              <div class="mb-3">
+                <label for="panelCount" class="form-label">Number of Panels</label>
+                <input type="number" class="form-control" id="panelCount" value="10" required>
+                <small class="text-muted">Number of solar panels in your system</small>
+              </div>
+              <div class="mb-3">
+                <label for="panelWattage" class="form-label">Panel Wattage (W)</label>
+                <select class="form-select" id="panelWattage" required>
+                  <option value="250">250W (Standard)</option>
+                  <option value="300">300W (Premium)</option>
+                  <option value="350">350W (High-Efficiency)</option>
+                  <option value="400">400W (Ultra-Efficient)</option>
+                </select>
+                <small class="text-muted">Select your panel wattage</small>
+              </div>
+              <div class="mb-3">
+                <label for="location" class="form-label">Location</label>
+                <select class="form-select" id="location" required>
+                  <option value="sunny">Sunny Region (5 sun hours)</option>
+                  <option value="moderate">Moderate Region (4 sun hours)</option>
+                  <option value="cloudy">Cloudy Region (3 sun hours)</option>
+                </select>
+                <small class="text-muted">Select your location to estimate sun hours</small>
+              </div>
+              <div class="mb-3">
+                <label for="systemEfficiency" class="form-label">System Efficiency (%)</label>
+                <input type="number" class="form-control" id="systemEfficiency" value="85" required>
+                <small class="text-muted">Typical efficiency: 80-90%</small>
+              </div>
+              <div class="mb-3">
+                <label for="monthlyBill" class="form-label">Monthly Electricity Bill (₱)</label>
+                <input type="number" class="form-control" id="monthlyBill" value="1000" required>
+                <small class="text-muted">Your current monthly electricity bill</small>
+              </div>
+              <div class="mb-3">
+                <label for="usagePattern" class="form-label">Usage Pattern</label>
+                <select class="form-select" id="usagePattern" required>
+                  <option value="even">Even Usage (Day/Night)</option>
+                  <option value="day-heavy">Day Heavy (70% Day)</option>
+                  <option value="night-heavy">Night Heavy (70% Night)</option>
+                </select>
+                <small class="text-muted">Select your typical usage pattern</small>
+              </div>
+              <button type="submit" class="btn btn-primary">Run Simulation</button>
+            </form>
+            <div id="simulationResults" class="mt-3"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Faq Section -->
     <section id="faq" class="faq section light-background">
@@ -1229,36 +1418,104 @@ We offer the highest quality products and services available in the market.     
   <script src="assets/js/main.js"></script>
 
   <script>
+    // Shopping Cart Modal
+    const cartModal = document.getElementById('cartModal');
+    const cartCount = document.querySelector('.cart-count');
+    let cart = [];
+
+    // Function to update cart count
+    function updateCartCount() {
+      cartCount.textContent = cart.length;
+    }
+
+    // Function to update cart total
+    function updateCartTotal() {
+      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      document.getElementById('cart-total').textContent = `₱${total.toFixed(2)}`;
+    }
+
+    // Function to add item to cart
+    function addToCart(productId, productName, productPrice) {
+      const existingItem = cart.find(item => item.id === productId);
+      
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({
+          id: productId,
+          name: productName,
+          price: parseFloat(productPrice),
+          quantity: 1
+        });
+      }
+
+      updateCartCount();
+      updateCartTotal();
+      updateCartDisplay();
+      
+      alert('Product added to cart!');
+    }
+
+    // Function to remove item from cart
+    function removeFromCart(productId) {
+      cart = cart.filter(item => item.id !== productId);
+      updateCartCount();
+      updateCartTotal();
+      updateCartDisplay();
+    }
+
+    // Function to update cart display
+    function updateCartDisplay() {
+      const cartItems = document.getElementById('cart-items');
+      cartItems.innerHTML = '';
+
+      cart.forEach(item => {
+        const itemElement = document.createElement('div');
+        itemElement.className = 'cart-item mb-2';
+        itemElement.innerHTML = `
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="mb-0">${item.name}</h6>
+              <small>Quantity: ${item.quantity}</small>
+            </div>
+            <div class="d-flex align-items-center">
+              <span class="me-3">₱${(item.price * item.quantity).toFixed(2)}</span>
+              <button class="btn btn-sm btn-danger" onclick="removeFromCart(${item.id})">
+                Remove
+              </button>
+            </div>
+          </div>
+        `;
+        cartItems.appendChild(itemElement);
+      });
+    }
+
+    // Initialize event listeners
     document.addEventListener('DOMContentLoaded', function() {
-      const solarPanelLink = document.getElementById('solarPanelLink');
-      const solarPanelPopup = document.getElementById('solarPanelPopup');
-      const batteryLink = document.getElementById('batteryLink');
-      const batteryPopup = document.getElementById('batteryPopup');
-      const inverterLink = document.getElementById('inverterLink');
-      const inverterPopup = document.getElementById('inverterPopup');
-      const accessoriesLink = document.getElementById('accessoriesLink');
-      const accessoriesPopup = document.getElementById('accessoriesPopup');
+      const addToCartButtons = document.querySelectorAll('.add-to-cart');
+      addToCartButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const productId = this.dataset.productId;
+          const productName = this.dataset.productName;
+          const productPrice = this.dataset.productPrice;
+          addToCart(productId, productName, productPrice);
+        });
+      });
+
+      // Add event listeners for the new add-to-cart buttons in the popup
+      const addToCartButtonsInPopup = document.querySelectorAll('.add-to-cart');
+      addToCartButtonsInPopup.forEach(button => {
+        button.addEventListener('click', function() {
+          const productId = this.dataset.productId;
+          const productName = this.dataset.productName;
+          const productPrice = this.dataset.productPrice;
+          addToCart(productId, productName, productPrice);
+        });
+      });
+
+      // Close popup functionality
       const closeButtons = document.querySelectorAll('.close-popup');
-
-      solarPanelLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        solarPanelPopup.style.display = 'flex';
-      });
-
-      batteryLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        batteryPopup.style.display = 'flex';
-      });
-
-      inverterLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        inverterPopup.style.display = 'flex';
-      });
-
-      accessoriesLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        accessoriesPopup.style.display = 'flex';
-      });
+      const popups = document.querySelectorAll('.product-popup');
 
       closeButtons.forEach(button => {
         button.addEventListener('click', function() {
@@ -1267,420 +1524,61 @@ We offer the highest quality products and services available in the market.     
         });
       });
 
-      document.querySelectorAll('.product-popup').forEach(popup => {
+      // Click outside to close
+      popups.forEach(popup => {
         popup.addEventListener('click', function(e) {
-          if (e.target === popup) {
-            popup.style.display = 'none';
+          if (e.target === this) {
+            this.style.display = 'none';
           }
         });
       });
-    });
 
-    document.addEventListener('DOMContentLoaded', function() {
-      const addReviewBtn = document.getElementById('addReviewBtn');
-      const reviewForm = document.getElementById('reviewForm');
-      const closeReviewForm = document.getElementById('closeReviewForm');
+      // Open popup functionality
+      const productLinks = {
+        'solarPanelLink': 'solarPanelPopup',
+        'batteryLink': 'batteryPopup',
+        'inverterLink': 'inverterPopup',
+        'accessoriesLink': 'accessoriesPopup'
+      };
 
-      addReviewBtn.addEventListener('click', function() {
-        reviewForm.style.display = 'block';
-        this.style.display = 'none';
-      });
-
-      closeReviewForm.addEventListener('click', function() {
-        reviewForm.style.display = 'none';
-        addReviewBtn.style.display = 'block';
-      });
-
-      // Reset form on close
-      closeReviewForm.addEventListener('click', function() {
-        const form = reviewForm.querySelector('form');
-        if (form) {
-          form.reset();
-        }
-      });
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
-      const stars = document.querySelectorAll('.star-rating .stars .star');
-      const ratingValue = document.querySelector('.star-rating .rating-value');
-      const ratingInput = document.querySelector('.star-rating input[name="rating"]');
-
-      stars.forEach(star => {
-        star.addEventListener('click', function() {
-          const value = parseInt(this.getAttribute('data-value'));
-          ratingInput.value = value;
-          ratingValue.textContent = `${value}/5`;
-          
-          // Remove selected class from all stars
-          stars.forEach(s => s.classList.remove('selected'));
-          
-          // Add selected class to all stars up to and including the selected one
-          stars.forEach(s => {
-            if (value === 5) {
-              // If rating is 5, select all stars
-              s.classList.add('selected');
-            } else if (parseInt(s.getAttribute('data-value')) <= value) {
-              // For other ratings, select up to the selected value
-              s.classList.add('selected');
-            }
+      Object.entries(productLinks).forEach(([linkId, popupId]) => {
+        const link = document.getElementById(linkId);
+        const popup = document.getElementById(popupId);
+        
+        if (link && popup) {
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            popup.style.display = 'flex';
           });
-        });
-
-        star.addEventListener('mouseenter', function() {
-          const value = parseInt(this.getAttribute('data-value'));
-          stars.forEach(s => s.classList.remove('hovered'));
-          
-          // Add hovered class to all stars up to and including the hovered one
-          stars.forEach(s => {
-            if (parseInt(s.getAttribute('data-value')) <= value) {
-              s.classList.add('hovered');
-            }
-          });
-        });
-
-        star.addEventListener('mouseleave', function() {
-          stars.forEach(s => s.classList.remove('hovered'));
-        });
+        }
       });
     });
   </script>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const form = document.getElementById('solarEstimateForm');
-      
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Validate form
-        if (!form.checkValidity()) {
-          e.stopPropagation();
-          return;
-        }
-
-        // Get form data
-        const formData = {
-          propertyType: document.getElementById('propertyType').value,
-          roofType: document.getElementById('roofType').value,
-          monthlyBill: document.getElementById('monthlyBill').value,
-          usageHours: document.getElementById('usageHours').value,
-          systemType: document.getElementById('systemType').value,
-          backupHours: document.getElementById('backupHours').value,
-        };
-
-        // Here you would typically send the data to your server
-        console.log('Form submitted:', formData);
-
-        // Show success message
-        alert('Thank you! We will contact you shortly with your solar estimate.');
-        form.reset();
-      });
-
-      // Add form validation
-      form.classList.add('was-validated');
-    });
-  </script>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const solarCalculatorForm = document.getElementById('solarCalculatorForm');
-      
-      solarCalculatorForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Validate form
-        if (!solarCalculatorForm.checkValidity()) {
-          e.stopPropagation();
-          return;
-        }
-
-        // Get form data
-        const monthlyBill = parseFloat(document.getElementById('monthlyBill').value);
-        const backupDays = parseFloat(document.getElementById('backupDays').value);
-        const backupHours = parseFloat(document.getElementById('backupHours').value);
-        const location = document.getElementById('location').value;
-        const systemType = document.getElementById('systemType').value;
-
-        // Constants
-        const DAYS_IN_MONTH = 30;
-        const PANEL_WATTAGE = 300; // Average solar panel wattage
-        const PANEL_AREA = 1.6; // Average panel area in sqm
-        const PANEL_COST_GRID = 15000; // ₱15,000 per panel for grid-tied
-        const PANEL_COST_OFFGRID = 18000; // ₱18,000 per panel for off-grid (premium panels)
-        const INVERTER_COST_GRID = 30000; // ₱30,000 for grid-tied inverter
-        const INVERTER_COST_OFFGRID = 45000; // ₱45,000 for off-grid inverter
-        const INSTALLATION_COST_GRID = 20000; // ₱20,000 for grid-tied installation
-        const INSTALLATION_COST_OFFGRID = 30000; // ₱30,000 for off-grid installation
-        const BATTERY_COST = 15000; // ₱15,000 per kWh battery capacity
-        const SYSTEM_EFFICIENCY = 0.85;
-
-        // Calculate daily usage
-        const dailyUsage = (monthlyBill / DAYS_IN_MONTH) * 1000; // Convert to Wh
-
-        // Calculate backup power requirements
-        const backupPower = dailyUsage * backupDays;
-        const backupBatteryCapacity = backupPower * backupHours;
-
-        // Calculate system size based on location
-        let dailyGeneration = 0;
-        let requiredPanels = 0;
-        let systemCost = 0;
-
-        switch(location) {
-          case 'sunny':
-            dailyGeneration = PANEL_WATTAGE * 5 * SYSTEM_EFFICIENCY; // 5 sun hours
-            break;
-          case 'moderate':
-            dailyGeneration = PANEL_WATTAGE * 4 * SYSTEM_EFFICIENCY; // 4 sun hours
-            break;
-          case 'cloudy':
-            dailyGeneration = PANEL_WATTAGE * 3 * SYSTEM_EFFICIENCY; // 3 sun hours
-            break;
-        }
-
-        // Calculate required panels
-        requiredPanels = Math.ceil(dailyUsage / dailyGeneration);
-
-        // Calculate system cost based on system type
-        let panelCost = PANEL_COST_GRID;
-        let inverterCost = INVERTER_COST_GRID;
-        let installationCost = INSTALLATION_COST_GRID;
-        let batteryCost = 0;
-
-        if (systemType === 'off-grid') {
-          panelCost = PANEL_COST_OFFGRID;
-          inverterCost = INVERTER_COST_OFFGRID;
-          installationCost = INSTALLATION_COST_OFFGRID;
-          batteryCost = backupBatteryCapacity * BATTERY_COST / 1000; // Convert Wh to kWh
-        }
-
-        systemCost = (requiredPanels * panelCost) + inverterCost + installationCost + batteryCost;
-
-        // Calculate payback period
-        const annualSavings = monthlyBill * 12 * 0.8; // 80% savings
-        const paybackPeriod = systemCost / annualSavings;
-
-        const results = document.getElementById('calculatorResults');
-        results.innerHTML = `
-          <div class="card">
-            <div class="card-body">
-              <h6 class="card-subtitle mb-2 text-muted">System Requirements</h6>
-              <p><strong>Daily Usage:</strong> ${dailyUsage.toFixed(2)} Wh</p>
-              <p><strong>Required Panels:</strong> ${requiredPanels}</p>
-              <p><strong>System Area:</strong> ${requiredPanels * PANEL_AREA} sqm</p>
-              <p><strong>Battery Capacity:</strong> ${backupBatteryCapacity.toFixed(2)} Wh</p>
-            </div>
+  <!-- Shopping Cart Modal -->
+  <div class="modal fade" id="cartModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Shopping Cart</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="cart-items" class="cart-items">
+            <!-- Cart items will be dynamically added here -->
           </div>
-          <div class="card mt-3">
-            <div class="card-body">
-              <h6 class="card-subtitle mb-2 text-muted">Financial Analysis</h6>
-              <p><strong>System Cost:</strong> ₱${systemCost.toFixed(2)}</p>
-              <p><strong>Annual Savings:</strong> ₱${annualSavings.toFixed(2)}</p>
-              <p><strong>Payback Period:</strong> ${paybackPeriod.toFixed(1)} years</p>
-            </div>
+          <div class="cart-total mt-3">
+            <h6 class="text-end">Total: <span id="cart-total">₱0.00</span></h6>
           </div>
-        `;
-      });
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Proceed to Checkout</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      // Add form validation
-      solarCalculatorForm.classList.add('was-validated');
-    });
-  </script>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const form = document.getElementById('solarEstimateForm');
-      
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Validate form
-        if (!form.checkValidity()) {
-          e.stopPropagation();
-          return;
-        }
-
-        // Get form data
-        const formData = {
-          propertyType: document.getElementById('propertyType').value,
-          roofType: document.getElementById('roofType').value,
-          monthlyBill: document.getElementById('monthlyBill').value,
-          usageHours: document.getElementById('usageHours').value,
-          systemType: document.getElementById('systemType').value,
-          backupHours: document.getElementById('backupHours').value,
-        };
-
-        // Here you would typically send the data to your server
-        console.log('Form submitted:', formData);
-
-        // Show success message
-        alert('Thank you! We will contact you shortly with your solar estimate.');
-        form.reset();
-      });
-
-      // Add form validation
-      form.classList.add('was-validated');
-    });
-  </script>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const solarEstimateForm = document.getElementById('solarEstimateForm');
-      
-      solarEstimateForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Validate form
-        if (!solarEstimateForm.checkValidity()) {
-          e.stopPropagation();
-          return;
-        }
-
-        // Get form data
-        const roofArea = parseFloat(document.getElementById('roofArea').value);
-        const usageHours = parseFloat(document.getElementById('usageHours').value);
-        const systemType = document.getElementById('systemType').value;
-
-        let panelCount = Math.ceil(roofArea / 2); // Approximate 2 sqm per panel
-        let batteryCapacity = 0;
-
-        if (systemType === 'off-grid') {
-          batteryCapacity = usageHours * 300; // 300W per panel
-        }
-
-        const results = document.getElementById('estimateResults');
-        results.innerHTML = `
-          <p><strong>Recommended Panels:</strong> ${panelCount}</p>
-          ${systemType === 'off-grid' ? `<p><strong>Battery Capacity:</strong> ${batteryCapacity}Wh</p>` : ''}
-        `;
-      });
-
-      // Add form validation
-      solarEstimateForm.classList.add('was-validated');
-    });
-  </script>
-
-  <script>
-    function runSimulation() {
-      try {
-        // Get input values
-        const panelCount = parseFloat(document.getElementById('panelCount').value) || 10;
-        const panelWattage = parseFloat(document.getElementById('panelWattage').value) || 300;
-        const location = document.getElementById('location').value || 'moderate';
-        const systemEfficiency = parseFloat(document.getElementById('systemEfficiency').value) || 85;
-        const monthlyBill = parseFloat(document.getElementById('monthlyBill').value) || 1000;
-        const usagePattern = document.getElementById('usagePattern').value || 'even';
-
-        // Constants
-        const DAYS_IN_MONTH = 30;
-        const DAYS_IN_YEAR = 365;
-        const USAGE_PATTERN_FACTORS = {
-          'even': 1.0,
-          'day-heavy': 1.2,
-          'night-heavy': 0.8
-        };
-
-        // Calculate sun hours based on location
-        let sunHours = 4; // Default to moderate
-        switch(location) {
-          case 'sunny':
-            sunHours = 5; // 5 sun hours
-            break;
-          case 'moderate':
-            sunHours = 4; // 4 sun hours
-            break;
-          case 'cloudy':
-            sunHours = 3; // 3 sun hours
-            break;
-        }
-
-        // Calculate generation
-        const dailyGeneration = (panelCount * panelWattage * sunHours * (systemEfficiency / 100)) / 1000; // Convert to kWh
-        const monthlyGeneration = dailyGeneration * DAYS_IN_MONTH;
-        const yearlyGeneration = dailyGeneration * DAYS_IN_YEAR;
-
-        // Calculate savings based on usage pattern
-        const usageFactor = USAGE_PATTERN_FACTORS[usagePattern] || 1.0;
-        const monthlySavings = (monthlyBill * usageFactor * 0.8).toFixed(2); // 80% savings
-        const yearlySavings = monthlySavings * 12;
-
-        // Calculate payback period
-        const systemCost = (panelCount * 15000) + 30000 + 20000; // Panels + Inverter + Installation
-        const paybackPeriod = (systemCost / yearlySavings).toFixed(1);
-
-        // Generate results
-        const resultsDiv = document.getElementById('simulationResults');
-        if (resultsDiv) {
-          resultsDiv.innerHTML = `
-            <div class="row">
-              <div class="col-md-6">
-                <div class="card">
-                  <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">Power Generation</h6>
-                    <p><strong>Daily Generation:</strong> ${dailyGeneration.toFixed(2)} kWh</p>
-                    <p><strong>Monthly Generation:</strong> ${monthlyGeneration.toFixed(2)} kWh</p>
-                    <p><strong>Yearly Generation:</strong> ${yearlyGeneration.toFixed(2)} kWh</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="card">
-                  <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">Financial Analysis</h6>
-                    <p><strong>Monthly Savings:</strong> ₱${monthlySavings}</p>
-                    <p><strong>Yearly Savings:</strong> ₱${yearlySavings.toFixed(2)}</p>
-                    <p><strong>Payback Period:</strong> ${paybackPeriod} years</p>
-                    <p><strong>ROI:</strong> ${(100 / paybackPeriod).toFixed(1)}% per year</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          `;
-
-          // Create generation chart
-          if (typeof Chart !== 'undefined') {
-            const chartDiv = document.createElement('div');
-            chartDiv.className = 'mt-3';
-            const canvas = document.createElement('canvas');
-            canvas.id = 'generationChart';
-            chartDiv.appendChild(canvas);
-            resultsDiv.appendChild(chartDiv);
-
-            const ctx = canvas.getContext('2d');
-            new Chart(ctx, {
-              type: 'bar',
-              data: {
-                labels: ['Daily', 'Monthly', 'Yearly'],
-                datasets: [{
-                  label: 'Generation (kWh)',
-                  data: [dailyGeneration, monthlyGeneration, yearlyGeneration],
-                  backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                  borderColor: 'rgba(54, 162, 235, 1)',
-                  borderWidth: 1
-                }]
-              },
-              options: {
-                responsive: true,
-                scales: {
-                  y: {
-                    beginAtZero: true
-                  }
-                }
-              }
-            });
-          }
-        } else {
-          console.error('Results container not found');
-        }
-      } catch (error) {
-        console.error('Error in simulation:', error);
-        alert('An error occurred while running the simulation. Please check your inputs and try again.');
-      }
-    }
-  </script>
-
-  <!-- Add Chart.js library -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 
 </html>
