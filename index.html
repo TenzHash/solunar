@@ -98,68 +98,127 @@
       color: #000;
     }
 
-    .product-popup {
+    .cart-popup {
       display: none;
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      z-index: 1000;
+      background-color: rgba(0, 0, 0, 0.5);
       justify-content: center;
       align-items: center;
+      z-index: 1000;
     }
 
-    .popup-content {
-      background: white;
+    .cart-content {
+      background-color: white;
       padding: 2rem;
       border-radius: 10px;
-      max-width: 900px;
+      max-width: 800px;
       width: 90%;
-      max-height: 90vh;
-      overflow-y: auto;
     }
 
-    .popup-header {
+    .cart-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 2rem;
     }
 
-    .close-popup {
-      font-size: 2rem;
+    .cart-items {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    .item-details {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .item-name {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .item-price {
+      font-size: 1.2rem;
+      color: #666;
+    }
+
+    .item-quantity {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .quantity-btn {
+      width: 2rem;
+      height: 2rem;
+      border: none;
+      border-radius: 50%;
+      background-color: #007bff;
+      color: white;
       cursor: pointer;
     }
 
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
+    .quantity {
+      font-size: 1.2rem;
+      font-weight: bold;
     }
 
-    .product-card {
-      text-align: center;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .product-card img {
-      width: 100%;
-      height: auto;
-      border-radius: 4px;
-    }
-
-    .learn-more {
-      background: #007bff;
+    .remove-item {
+      background-color: #dc3545;
       color: white;
       border: none;
       padding: 0.5rem 1rem;
       border-radius: 4px;
       cursor: pointer;
-      margin-top: 1rem;
+    }
+
+    .cart-summary {
+      margin-top: 2rem;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .total-label {
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .total-amount {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #007bff;
+    }
+
+    .checkout-btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
     }
 
     .review-form .card {
@@ -273,7 +332,7 @@
 
     .solar-estimate .card {
       border: none;
-      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     .solar-estimate .card-body {
@@ -416,6 +475,102 @@
       border: 1px solid #000;
       color: #000;
     }
+
+    /* Cart Item Styles */
+    .cart-item {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      border-bottom: 1px solid #f0f0f0;
+      transition: background-color 0.2s;
+    }
+    
+    .cart-item:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .cart-item-img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-right: 1rem;
+      border: 1px solid #eee;
+    }
+    
+    .cart-item-details {
+      flex: 1;
+    }
+    
+    .cart-item-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: #333;
+    }
+    
+    .cart-item-price {
+      color: #0d6efd;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+    
+    .quantity-btn {
+      width: 30px;
+      height: 30px;
+      border: 1px solid #dee2e6;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s;
+    }
+    
+    .quantity-btn:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .quantity-input {
+      width: 40px;
+      height: 30px;
+      text-align: center;
+      border: 1px solid #dee2e6;
+      border-left: none;
+      border-right: none;
+    }
+    
+    .remove-item {
+      color: #dc3545;
+      cursor: pointer;
+      font-size: 1.1rem;
+      margin-left: 1rem;
+      transition: color 0.2s;
+    }
+    
+    .remove-item:hover {
+      color: #bb2d3b;
+    }
+    
+    .cart-summary {
+      background-color: #f8f9fa;
+    }
+    
+    /* Animation for cart updates */
+    @keyframes slideIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    .cart-item {
+      animation: slideIn 0.3s ease-out;
+    }
   </style>
 
 </head>
@@ -460,6 +615,7 @@
               </ul>
             </li>-->
             <li><a href="#contact">Contact</a></li>
+            <li><a href="#" id="adminLoginLink">Login</a></li>
           </ul>
           <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
         </nav>
@@ -467,7 +623,7 @@
         <a class="cta-btn d-none d-sm-block" href="#appointment">Make an Appointment</a>
 
         <div class="navbar-nav ms-auto">
-          <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#cartModal">
+          <a class="nav-link" href="checkout.html" data-bs-toggle="modal" data-bs-target="#cartModal">
             <i class="bi bi-cart"></i>
             <span class="badge bg-primary cart-count">0</span>
           </a>
@@ -644,7 +800,6 @@ We offer the highest quality products and services available in the market.     
             <h3>Premium Solar Panel</h3>
             <p>High efficiency solar panel with 25-year warranty</p>
             <div class="product-actions">
-              <button class="learn-more">Learn More</button>
               <button class="btn btn-primary add-to-cart" 
                       data-product-id="101" 
                       data-product-name="Premium Solar Panel" 
@@ -658,7 +813,6 @@ We offer the highest quality products and services available in the market.     
             <h3>Standard Solar Panel</h3>
             <p>Cost-effective solution with excellent performance</p>
             <div class="product-actions">
-              <button class="learn-more">Learn More</button>
               <button class="btn btn-primary add-to-cart" 
                       data-product-id="102" 
                       data-product-name="Standard Solar Panel" 
@@ -672,7 +826,6 @@ We offer the highest quality products and services available in the market.     
             <h3>Commercial Solar Panel</h3>
             <p>Designed for large-scale commercial installations</p>
             <div class="product-actions">
-              <button class="learn-more">Learn More</button>
               <button class="btn btn-primary add-to-cart" 
                       data-product-id="103" 
                       data-product-name="Commercial Solar Panel" 
@@ -686,94 +839,182 @@ We offer the highest quality products and services available in the market.     
     </div>
 
     <!-- Battery Products Popup -->
-    <div id="batteryPopup" class="product-popup">
-      <div class="popup-content">
-        <div class="popup-header">
+<div id="batteryPopup" class="product-popup">
+  <div class="popup-content">
+      <div class="popup-header">
           <h2>Battery Products</h2>
           <span class="close-popup">&times;</span>
-        </div>
-        <div class="products-grid">
-          <div class="product-card">
-            <img src="https://via.placeholder.com/200x200" alt="Battery 1">
-            <h3>Lithium Iron Phosphate (LiFePO4)</h3>
-            <p>Long-lasting, safe, and reliable battery solution</p>
-            <button class="learn-more">Learn More</button>
-          </div>
-          <div class="product-card">
-            <img src="https://via.placeholder.com/200x200" alt="Battery 2">
-            <h3>Deep Cycle AGM</h3>
-            <p>Cost-effective deep cycle battery for solar systems</p>
-            <button class="learn-more">Learn More</button>
-          </div>
-          <div class="product-card">
-            <img src="https://via.placeholder.com/200x200" alt="Battery 3">
-            <h3>Industrial Battery Bank</h3>
-            <p>High-capacity battery solution for large installations</p>
-            <button class="learn-more">Learn More</button>
-          </div>
-        </div>
       </div>
-    </div>
+      <div class="products-grid">
+          <div class="product-card">
+              <img src="https://via.placeholder.com/200x200" alt="Battery 1">
+              <h3>Lithium Iron Phosphate (LiFePO4)</h3>
+              <p>Long-lasting, safe, and reliable battery solution</p>
+              <div class="product-actions">
+                  <button class="btn btn-primary add-to-cart" 
+                          data-product-id="201" 
+                          data-product-name="LiFePO4 Battery" 
+                          data-product-price="35000">
+                      Add to Cart
+                  </button>
+              </div>
+          </div>
+          <div class="product-card">
+              <img src="https://via.placeholder.com/200x200" alt="Battery 2">
+              <h3>Deep Cycle AGM</h3>
+              <p>Cost-effective deep cycle battery for solar systems</p>
+              <div class="product-actions">
+                  <button class="btn btn-primary add-to-cart" 
+                          data-product-id="202" 
+                          data-product-name="Deep Cycle AGM Battery" 
+                          data-product-price="25000">
+                      Add to Cart
+                  </button>
+              </div>
+          </div>
+          <div class="product-card">
+              <img src="https://via.placeholder.com/200x200" alt="Battery 3">
+              <h3>Industrial Battery Bank</h3>
+              <p>High-capacity battery solution for large installations</p>
+              <div class="product-actions">
+                  <button class="btn btn-primary add-to-cart" 
+                          data-product-id="203" 
+                          data-product-name="Industrial Battery Bank" 
+                          data-product-price="50000">
+                      Add to Cart
+                  </button>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
 
-    <!-- Inverter Products Popup -->
-    <div id="inverterPopup" class="product-popup">
-      <div class="popup-content">
-        <div class="popup-header">
+<!-- Inverter Products Popup -->
+<div id="inverterPopup" class="product-popup">
+  <div class="popup-content">
+      <div class="popup-header">
           <h2>Inverter Products</h2>
           <span class="close-popup">&times;</span>
-        </div>
-        <div class="products-grid">
-          <div class="product-card">
-            <img src="https://via.placeholder.com/200x200" alt="Inverter 1">
-            <h3>Hybrid Inverter</h3>
-            <p>Intelligent energy management system</p>
-            <button class="learn-more">Learn More</button>
-          </div>
-          <div class="product-card">
-            <img src="https://via.placeholder.com/200x200" alt="Inverter 2">
-            <h3>Off-Grid Inverter</h3>
-            <p>Perfect for remote locations</p>
-            <button class="learn-more">Learn More</button>
-          </div>
-          <div class="product-card">
-            <img src="https://via.placeholder.com/200x200" alt="Inverter 3">
-            <h3>Grid-Tie Inverter</h3>
-            <p>Efficient grid-connected solution</p>
-            <button class="learn-more">Learn More</button>
-          </div>
-        </div>
       </div>
-    </div>
-
-    <!-- Accessories Products Popup -->
-    <div id="accessoriesPopup" class="product-popup">
-      <div class="popup-content">
-        <div class="popup-header">
+      <div class="products-grid">
+          <div class="product-card">
+              <img src="https://via.placeholder.com/200x200" alt="Inverter 1">
+              <h3>Hybrid Inverter</h3>
+              <p>Intelligent energy management system</p>
+              <div class="product-actions">
+                  <button class="btn btn-primary add-to-cart" 
+                          data-product-id="301" 
+                          data-product-name="Hybrid Inverter" 
+                          data-product-price="45000">
+                      Add to Cart
+                  </button>
+              </div>
+          </div>
+          <div class="product-card">
+              <img src="https://via.placeholder.com/200x200" alt="Inverter 2">
+              <h3>Off-Grid Inverter</h3>
+              <p>Perfect for remote locations</p>
+              <div class="product-actions">
+                  <button class="btn btn-primary add-to-cart" 
+                          data-product-id="302" 
+                          data-product-name="Off-Grid Inverter" 
+                          data-product-price="30000">
+                      Add to Cart
+                  </button>
+              </div>
+          </div>
+          <div class="product-card">
+              <img src="https://via.placeholder.com/200x200" alt="Inverter 3">
+              <h3>Grid-Tie Inverter</h3>
+              <p>Efficient grid-connected solution</p>
+              <div class="product-actions">
+                  <button class="btn btn-primary add-to-cart" 
+                          data-product-id="303" 
+                          data-product-name="Grid-Tie Inverter" 
+                          data-product-price="25000">
+                      Add to Cart
+                  </button>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+   <!-- Accessories Products Popup -->
+<div id="accessoriesPopup" class="product-popup">
+  <div class="popup-content">
+      <div class="popup-header">
           <h2>Accessories</h2>
           <span class="close-popup">&times;</span>
-        </div>
-        <div class="products-grid">
-          <div class="product-card">
-            <img src="https://via.placeholder.com/200x200" alt="Accessory 1">
-            <h3>MC4 Connectors</h3>
-            <p>High-quality solar panel connectors</p>
-            <button class="learn-more">Learn More</button>
-          </div>
-          <div class="product-card">
-            <img src="https://via.placeholder.com/200x200" alt="Accessory 2">
-            <h3>Mounting Systems</h3>
-            <p>Durable mounting solutions for all installations</p>
-            <button class="learn-more">Learn More</button>
-          </div>
-          <div class="product-card">
-            <img src="https://via.placeholder.com/200x200" alt="Accessory 3">
-            <h3>Monitoring Systems</h3>
-            <p>Real-time system performance tracking</p>
-            <button class="learn-more">Learn More</button>
-          </div>
-        </div>
       </div>
-    </div>
+      <div class="products-grid">
+          <div class="product-card">
+              <img src="https://via.placeholder.com/200x200" alt="MC4 Connectors">
+              <h3>MC4 Connectors</h3>
+              <p>High-quality solar panel connectors</p>
+              <div class="product-actions">
+                  <button class="btn btn-primary add-to-cart" 
+                          data-product-id="401" 
+                          data-product-name="MC4 Connectors" 
+                          data-product-price="500">
+                      Add to Cart
+                  </button>
+              </div>
+          </div>
+          <div class="product-card">
+              <img src="https://via.placeholder.com/200x200" alt="Solar Mounting System">
+              <h3>Solar Mounting System</h3>
+              <p>Durable mounting solution for solar panels</p>
+              <div class="product-actions">
+                  <button class="btn btn-primary add-to-cart" 
+                          data-product-id="402" 
+                          data-product-name="Solar Mounting System" 
+                          data-product-price="1500">
+                      Add to Cart
+                  </button>
+              </div>
+          </div>
+          <div class="product-card">
+              <img src="https://via.placeholder.com/200x200" alt="Solar Charge Controller">
+              <h3>Solar Charge Controller</h3>
+              <p>Efficient battery charging management</p>
+              <div class="product-actions">
+                  <button class="btn btn-primary add-to-cart" 
+                          data-product-id="403" 
+                          data-product-name="Solar Charge Controller" 
+                          data-product-price="2500">
+                      Add to Cart
+                  </button>
+              </div>
+          </div>
+          <div class="product-card">
+              <img src="https://via.placeholder.com/200x200" alt="Solar Cables">
+              <h3>Solar Cables</h3>
+              <p>High-quality cables for solar installations</p>
+              <div class="product-actions">
+                  <button class="btn btn-primary add-to-cart" 
+                          data-product-id="404" 
+                          data-product-name="Solar Cables" 
+                          data-product-price="800">
+                      Add to Cart
+                  </button>
+              </div>
+          </div>
+          <div class="product-card">
+              <img src="https://via.placeholder.com/200x200" alt="Solar Junction Box">
+              <h3>Solar Junction Box</h3>
+              <p>Waterproof junction box for solar systems</p>
+              <div class="product-actions">
+                  <button class="btn btn-primary add-to-cart" 
+                          data-product-id="405" 
+                          data-product-name="Solar Junction Box" 
+                          data-product-price="1200">
+                      Add to Cart
+                  </button>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
 
     <!-- Appointment Section -->
     <section id="appointment" class="appointment section">
@@ -1005,45 +1246,70 @@ We offer the highest quality products and services available in the market.     
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body">
-            <form id="solarCalculatorForm">
-              <div class="mb-3">
+            <form id="solarCalculatorForm" class="row g-3">
+              <div class="col-md-6">
                 <label for="calculatorMonthlyBill" class="form-label">Monthly Electricity Bill (₱)</label>
                 <input type="number" class="form-control" id="calculatorMonthlyBill" required>
               </div>
-              <div class="mb-3">
+
+              <div class="col-md-6">
+                <label for="calculatorUsageType" class="form-label">Usage Type</label>
+                <select class="form-select" id="calculatorUsageType" required>
+                  <option value="">Select Usage Type</option>
+                  <option value="household">Household</option>
+                  <option value="commercial">Commercial</option>
+                  <option value="industrial">Industrial</option>
+                </select>
+                <small class="text-muted">Select the type of usage for your solar system</small>
+              </div>
+              <div class="col-md-6">
+                <label for="calculatorPanelSize" class="form-label">Panel Size (Watts)</label>
+                <select class="form-select" id="calculatorPanelSize" required>
+                  <option value="">Select Panel Size</option>
+                  <option value="250">250W</option>
+                  <option value="300" selected>300W (Standard)</option>
+                  <option value="350">350W</option>
+                  <option value="400">400W</option>
+                  <option value="450">450W</option>
+                  <option value="500">500W</option>
+                </select>
+                <small class="text-muted">Select the wattage of your solar panels</small>
+              </div>
+              <div class="col-md-6">
                 <label for="calculatorBackupDays" class="form-label">Backup Days</label>
                 <input type="number" class="form-control" id="calculatorBackupDays" value="3" required>
-                <small class="text-muted">Number of days of backup power needed</small>
               </div>
-              <div class="mb-3">
+              <div class="col-md-6">
                 <label for="calculatorBackupHours" class="form-label">Backup Hours per Day</label>
                 <input type="number" class="form-control" id="calculatorBackupHours" value="8" required>
-                <small class="text-muted">Number of hours of backup power needed per day</small>
               </div>
-              <div class="mb-3">
-                <label for="calculatorLocation" class="form-label">Location</label>
+              <div class="col-md-6">
+                <label for="calculatorLocation" class="form-label">Location (Bicol Area)</label>
                 <select class="form-select" id="calculatorLocation" required>
                   <option value="">Select Location</option>
-                  <option value="sunny">Sunny Region</option>
-                  <option value="moderate">Moderate Region</option>
-                  <option value="cloudy">Cloudy Region</option>
+                  <option value="naga">Naga City (3.5 sun hours)</option>
+                  <option value="legazpi">Legazpi City (3.5 sun hours)</option>
+                  <option value="iriga">Iriga City (4 sun hours)</option>
+                  <option value="tabaco">Tabaco City (4 sun hours)</option>
+                  <option value="sorsogon">Sorsogon City (4.5 sun hours)</option>
+                  <option value="masbate">Masbate City (4.5 sun hours)</option>
                 </select>
+                <small class="text-muted">Select your city in Bicol Area</small>
               </div>
-              <div class="mb-3">
+              <div class="col-md-6">
                 <label for="calculatorSystemType" class="form-label">System Type</label>
                 <select class="form-select" id="calculatorSystemType" required>
                   <option value="">Select System Type</option>
                   <option value="grid-tied">Grid-Tied System</option>
                   <option value="off-grid">Off-Grid System</option>
                 </select>
-                <small class="text-muted">Choose between grid-tied or off-grid system</small>
               </div>
-              <button type="submit" class="btn btn-primary">Calculate</button>
+              <div class="col-12">
+                <button type="submit" class="btn btn-primary">Calculate</button>
+                <button type="button" class="btn btn-secondary" onclick="resetCalculator()">Reset</button>
+              </div>
             </form>
             <div id="calculatorResults" class="mt-3"></div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
@@ -1072,13 +1338,17 @@ We offer the highest quality products and services available in the market.     
                 <input type="number" class="form-control" id="estimateUsageHours" min="0" max="24" required>
               </div>
               <div class="mb-3">
-                <label for="estimateLocation" class="form-label">Location</label>
+                <label for="estimateLocation" class="form-label">Location (Bicol Area)</label>
                 <select class="form-select" id="estimateLocation" required>
                   <option value="">Select Location</option>
-                  <option value="low">Metro Manila</option>
-                  <option value="moderate">Cebu, Davao</option>
-                  <option value="high">Baguio, Tagaytay</option>
+                  <option value="naga">Naga City (3.5 sun hours)</option>
+                  <option value="legazpi">Legazpi City (3.5 sun hours)</option>
+                  <option value="iriga">Iriga City (4 sun hours)</option>
+                  <option value="tabaco">Tabaco City (4 sun hours)</option>
+                  <option value="sorsogon">Sorsogon City (4.5 sun hours)</option>
+                  <option value="masbate">Masbate City (4.5 sun hours)</option>
                 </select>
+                <small class="text-muted">Select your city in Bicol Area</small>
               </div>
               <div class="mb-3">
                 <label for="estimateSystemType" class="form-label">System Type</label>
@@ -1089,7 +1359,8 @@ We offer the highest quality products and services available in the market.     
                   <option value="hybrid">Hybrid</option>
                 </select>
               </div>
-              <button type="submit" class="btn btn-primary">Estimate System</button>
+              <button type="submit" class="btn btn-primary">Estimate</button>
+              <button type="button" class="btn btn-secondary" onclick="resetEstimator()">Reset</button>
             </form>
             <div id="estimateResults" class="mt-3"></div>
           </div>
@@ -1126,13 +1397,17 @@ We offer the highest quality products and services available in the market.     
                 <small class="text-muted">Select your panel wattage</small>
               </div>
               <div class="mb-3">
-                <label for="location" class="form-label">Location</label>
+                <label for="location" class="form-label">Location (Bicol Area)</label>
                 <select class="form-select" id="location" required>
-                  <option value="sunny">Sunny Region (5 sun hours)</option>
-                  <option value="moderate">Moderate Region (4 sun hours)</option>
-                  <option value="cloudy">Cloudy Region (3 sun hours)</option>
+                  <option value="">Select Location</option>
+                  <option value="naga">Naga City (3.5 sun hours)</option>
+                  <option value="legazpi">Legazpi City (3.5 sun hours)</option>
+                  <option value="iriga">Iriga City (4 sun hours)</option>
+                  <option value="tabaco">Tabaco City (4 sun hours)</option>
+                  <option value="sorsogon">Sorsogon City (4.5 sun hours)</option>
+                  <option value="masbate">Masbate City (4.5 sun hours)</option>
                 </select>
-                <small class="text-muted">Select your location to estimate sun hours</small>
+                <small class="text-muted">Select your city in Bicol Area</small>
               </div>
               <div class="mb-3">
                 <label for="systemEfficiency" class="form-label">System Efficiency (%)</label>
@@ -1147,6 +1422,7 @@ We offer the highest quality products and services available in the market.     
               <div class="mb-3">
                 <label for="usagePattern" class="form-label">Usage Pattern</label>
                 <select class="form-select" id="usagePattern" required>
+                  <option value="">Select Usage Pattern</option>
                   <option value="even">Even Usage (Day/Night)</option>
                   <option value="day-heavy">Day Heavy (70% Day)</option>
                   <option value="night-heavy">Night Heavy (70% Night)</option>
@@ -1154,6 +1430,7 @@ We offer the highest quality products and services available in the market.     
                 <small class="text-muted">Select your typical usage pattern</small>
               </div>
               <button type="submit" class="btn btn-primary">Run Simulation</button>
+              <button type="button" class="btn btn-secondary" onclick="resetSimulation()">Reset</button>
             </form>
             <div id="simulationResults" class="mt-3"></div>
           </div>
@@ -1323,13 +1600,88 @@ We offer the highest quality products and services available in the market.     
 
   </main>
 
+  <!-- Admin Panel Section (hidden by default) -->
+  <section id="adminPanel" class="admin-panel" style="display: none;">
+    <div class="container" data-aos="fade-up">
+      <div class="section-title">
+        <h2>Admin Panel</h2>
+        <p>Manage your website content and settings</p>
+      </div>
+      
+      <div class="admin-controls">
+        <div class="row">
+          <div class="col-md-4 mb-4">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">Manage Products</h5>
+                <p class="card-text">Add, edit, or remove products from the store.</p>
+                <button class="btn btn-primary" id="manageProductsBtn">Manage Products</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-4">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">View Orders</h5>
+                <p class="card-text">View and manage customer orders.</p>
+                <button class="btn btn-primary" id="viewOrdersBtn">View Orders</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-4">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">Site Analytics</h5>
+                <p class="card-text">View website traffic and analytics.</p>
+                <button class="btn btn-primary" id="viewAnalyticsBtn">View Analytics</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="admin-logout mt-4">
+        <button class="btn btn-danger" id="adminLogoutBtn">Logout</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Login Modal -->
+  <div class="modal fade" id="adminLoginModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Login</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="adminLoginForm">
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input type="text" class="form-control" id="username" required>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" required>
+            </div>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <footer id="footer" class="footer light-background">
 
     <div class="container footer-top">
       <div class="row gy-4">
         <div class="col-lg-4 col-md-6 footer-about">
           <a href="index.html" class="logo d-flex align-items-center">
-            <span class="sitename">MLess</span>
+            <!-- Uncomment the line below if you also wish to use an image logo -->
+            <!-- <img src="assets/img/logo.png" alt=""> -->
+            <h1 style="color: black;">MLESS</h1>
           </a>
           <div class="footer-contact pt-3">
             <p>ALbay, Philippines</p>
@@ -1437,56 +1789,184 @@ We offer the highest quality products and services available in the market.     
     // Function to add item to cart
     function addToCart(productId, productName, productPrice) {
       const existingItem = cart.find(item => item.id === productId);
+      let addedItem;
       
       if (existingItem) {
         existingItem.quantity += 1;
+        addedItem = existingItem;
       } else {
-        cart.push({
+        addedItem = {
           id: productId,
           name: productName,
           price: parseFloat(productPrice),
           quantity: 1
-        });
+        };
+        cart.push(addedItem);
       }
 
       updateCartCount();
       updateCartTotal();
       updateCartDisplay();
       
-      alert('Product added to cart!');
+      // Show the confirmation modal
+      showCartConfirmation(addedItem);
+    }
+    
+    // Function to show cart confirmation popup
+    function showCartConfirmation(product) {
+      const modalElement = document.getElementById('cartConfirmationModal');
+      const modal = new bootstrap.Modal(modalElement);
+      
+      // Update product name in the modal
+      document.getElementById('addedProductName').textContent = product.name;
+      
+      // Remove any existing event listeners
+      const revertBtn = document.getElementById('revertAddToCart');
+      const viewCartBtn = document.getElementById('viewCartBtn');
+      
+      const newRevertBtn = revertBtn.cloneNode(true);
+      const newViewCartBtn = viewCartBtn.cloneNode(true);
+      
+      revertBtn.parentNode.replaceChild(newRevertBtn, revertBtn);
+      viewCartBtn.parentNode.replaceChild(newViewCartBtn, viewCartBtn);
+      
+      // Set up new event listeners
+      newRevertBtn.addEventListener('click', function() {
+        // Remove the item or decrease quantity
+        if (product.quantity > 1) {
+          product.quantity -= 1;
+        } else {
+          const itemIndex = cart.findIndex(item => item.id === product.id);
+          if (itemIndex > -1) {
+            cart.splice(itemIndex, 1);
+          }
+        }
+        
+        updateCartCount();
+        updateCartTotal();
+        updateCartDisplay();
+        
+        // Close the modal
+        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+        if (modalInstance) {
+          modalInstance.hide();
+        }
+      });
+      
+      newViewCartBtn.addEventListener('click', function() {
+        // Close the current modal
+        modal.hide();
+        
+        // Show the cart modal after a short delay to allow the current modal to close
+        setTimeout(() => {
+          const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
+          cartModal.show();
+        }, 150);
+      });
+      
+      // Show the modal
+      modal.show();
     }
 
     // Function to remove item from cart
     function removeFromCart(productId) {
-      cart = cart.filter(item => item.id !== productId);
-      updateCartCount();
-      updateCartTotal();
-      updateCartDisplay();
+      const itemIndex = cart.findIndex(item => item.id === productId);
+      if (itemIndex > -1) {
+        cart.splice(itemIndex, 1);
+        updateCartCount();
+        updateCartTotal();
+        updateCartDisplay();
+      }
     }
 
     // Function to update cart display
     function updateCartDisplay() {
       const cartItems = document.getElementById('cart-items');
-      cartItems.innerHTML = '';
-
+      const emptyCartMessage = document.getElementById('empty-cart-message');
+      
+      if (cart.length === 0) {
+        cartItems.innerHTML = `
+          <div id="empty-cart-message" class="text-center py-5">
+            <i class="bi bi-cart-x text-muted" style="font-size: 3rem;"></i>
+            <p class="mt-3 text-muted">Your cart is empty</p>
+          </div>`;
+        return;
+      }
+      
+      let itemsHTML = '';
       cart.forEach(item => {
-        const itemElement = document.createElement('div');
-        itemElement.className = 'cart-item mb-2';
-        itemElement.innerHTML = `
-          <div class="d-flex justify-content-between align-items-center">
-            <div>
-              <h6 class="mb-0">${item.name}</h6>
-              <small>Quantity: ${item.quantity}</small>
+        itemsHTML += `
+          <div class="cart-item" data-id="${item.id}">
+            <img src="${item.image || 'assets/img/placeholder.jpg'}" alt="${item.name}" class="cart-item-img">
+            <div class="cart-item-details">
+              <div class="cart-item-title">${item.name}</div>
+              <div class="cart-item-price">₱${item.price.toFixed(2)}</div>
+              <div class="quantity-controls">
+                <div class="quantity-btn decrease-quantity">-</div>
+                <input type="number" class="quantity-input" value="${item.quantity}" min="1">
+                <div class="quantity-btn increase-quantity">+</div>
+              </div>
             </div>
-            <div class="d-flex align-items-center">
-              <span class="me-3">₱${(item.price * item.quantity).toFixed(2)}</span>
-              <button class="btn btn-sm btn-danger" onclick="removeFromCart(${item.id})">
-                Remove
-              </button>
+            <div class="ms-auto text-end">
+              <div class="cart-item-price">₱${(item.price * item.quantity).toFixed(2)}</div>
+              <div class="remove-item" data-id="${item.id}" title="Remove item">
+                <i class="bi bi-trash"></i>
+              </div>
             </div>
-          </div>
-        `;
-        cartItems.appendChild(itemElement);
+          </div>`;
+      });
+      
+      cartItems.innerHTML = itemsHTML;
+      
+      // Add event listeners for quantity controls
+      document.querySelectorAll('.decrease-quantity').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const productId = this.closest('.cart-item').dataset.id;
+          const item = cart.find(item => item.id === productId);
+          if (item && item.quantity > 1) {
+            item.quantity--;
+            updateCartDisplay();
+            updateCartCount();
+            updateCartTotal();
+          }
+        });
+      });
+      
+      document.querySelectorAll('.increase-quantity').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const productId = this.closest('.cart-item').dataset.id;
+          const item = cart.find(item => item.id === productId);
+          if (item) {
+            item.quantity++;
+            updateCartDisplay();
+            updateCartCount();
+            updateCartTotal();
+          }
+        });
+      });
+      
+      // Add event listeners for remove buttons
+      document.querySelectorAll('.remove-item').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const productId = this.getAttribute('data-id');
+          removeFromCart(productId);
+        });
+      });
+      
+      // Update quantity when input changes
+      document.querySelectorAll('.quantity-input').forEach(input => {
+        input.addEventListener('change', function() {
+          const productId = this.closest('.cart-item').dataset.id;
+          const item = cart.find(item => item.id === productId);
+          if (item) {
+            const newQuantity = parseInt(this.value) || 1;
+            item.quantity = Math.max(1, newQuantity);
+            updateCartDisplay();
+            updateCartCount();
+            updateCartTotal();
+          }
+        });
       });
     }
 
@@ -1494,17 +1974,6 @@ We offer the highest quality products and services available in the market.     
     document.addEventListener('DOMContentLoaded', function() {
       const addToCartButtons = document.querySelectorAll('.add-to-cart');
       addToCartButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          const productId = this.dataset.productId;
-          const productName = this.dataset.productName;
-          const productPrice = this.dataset.productPrice;
-          addToCart(productId, productName, productPrice);
-        });
-      });
-
-      // Add event listeners for the new add-to-cart buttons in the popup
-      const addToCartButtonsInPopup = document.querySelectorAll('.add-to-cart');
-      addToCartButtonsInPopup.forEach(button => {
         button.addEventListener('click', function() {
           const productId = this.dataset.productId;
           const productName = this.dataset.productName;
@@ -1553,31 +2022,534 @@ We offer the highest quality products and services available in the market.     
         }
       });
     });
+
+    // Solar Calculator Functions
+    function calculateSolarSystem() {
+      const monthlyBill = parseFloat(document.getElementById('calculatorMonthlyBill').value);
+      const usageType = document.getElementById('calculatorUsageType').value;
+      const panelSize = parseInt(document.getElementById('calculatorPanelSize').value);
+      const backupDays = parseInt(document.getElementById('calculatorBackupDays').value);
+      const backupHours = parseInt(document.getElementById('calculatorBackupHours').value);
+      const location = document.getElementById('calculatorLocation').value;
+      const systemType = document.getElementById('calculatorSystemType').value;
+
+      // Validate inputs
+      if (isNaN(monthlyBill) || !usageType || isNaN(panelSize) || isNaN(backupDays) || isNaN(backupHours) || !location || !systemType) {
+        alert('Please fill in all required fields');
+        return;
+      }
+
+      // Constants
+      const panelArea = 1.6; // Standard panel area in sqm
+      const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+      
+      // Location-based sun hours
+      const sunHours = {
+        'naga': 3.5,  // Naga City
+        'legazpi': 3.5,  // Legazpi City
+        'iriga': 4,  // Iriga City
+        'tabaco': 4,   // Tabaco City
+        'sorsogon': 4.5,   // Sorsogon City
+        'masbate': 4.5   // Masbate City
+      };
+
+      // Usage type parameters
+      const usageParams = {
+        'household': {
+          efficiency: 0.80,
+          defaultBackupDays: 3,
+          defaultBackupHours: 8,
+          costMultiplier: 1.0
+        },
+        'commercial': {
+          efficiency: 0.75,
+          defaultBackupDays: 2,
+          defaultBackupHours: 12,
+          costMultiplier: 1.1
+        },
+        'industrial': {
+          efficiency: 0.70,
+          defaultBackupDays: 1,
+          defaultBackupHours: 24,
+          costMultiplier: 1.2
+        }
+      };
+
+      // Get usage type parameters
+      const params = usageParams[usageType];
+      const systemEfficiency = params.efficiency;
+      const finalBackupDays = backupDays || params.defaultBackupDays;
+      const finalBackupHours = backupHours || params.defaultBackupHours;
+
+      // Calculate daily energy consumption
+      const dailyKWh = monthlyBill / daysInMonth;
+      const dailyWh = dailyKWh * 1000;
+
+      // Calculate required system size
+      const requiredWatts = Math.ceil(dailyWh / sunHours[location] / systemEfficiency);
+      const numPanels = Math.ceil(requiredWatts / panelSize);
+
+      // Calculate battery requirements
+      const dailyBackupEnergy = dailyKWh * finalBackupHours / 24;
+      const totalBackupEnergy = dailyBackupEnergy * finalBackupDays;
+      const batteryCapacity = Math.ceil(totalBackupEnergy * 1000 * 1.2); // Add 20% buffer
+
+      // Calculate system cost with usage type multiplier
+      const panelCost = 25000; // Cost per panel in ₱
+      const inverterCost = 50000; // Cost of inverter in ₱
+      const installationCost = 30000; // Installation cost in ₱
+      const batteryCost = 50000; // Cost of battery system in ₱
+      
+      const totalCost = (numPanels * panelCost * params.costMultiplier) + 
+                       (inverterCost * params.costMultiplier) + 
+                       (installationCost * params.costMultiplier) + 
+                       (systemType === 'off-grid' ? batteryCost * params.costMultiplier : 0);
+
+      // Calculate monthly savings
+      const monthlySavings = dailyKWh * daysInMonth * 0.5; // 50% reduction
+      const paybackPeriod = Math.ceil(totalCost / (monthlySavings * 12));
+
+      // Calculate energy production
+      const energyProduction = Math.round(requiredWatts * sunHours[location] * daysInMonth * 
+                                         systemEfficiency);
+
+      // Display results
+      const results = document.getElementById('calculatorResults');
+      results.innerHTML = `
+        <div class="alert alert-success">
+          <h5>System Requirements:</h5>
+          <p><strong>Usage Type:</strong> ${usageType.charAt(0).toUpperCase() + usageType.slice(1)}</p>
+          <p><strong>System Size:</strong> ${Math.round(requiredWatts)}W</p>
+          <p><strong>Number of Panels:</strong> ${numPanels}</p>
+          <p><strong>Battery Capacity:</strong> ${Math.round(batteryCapacity)}Wh</p>
+          <p><strong>Estimated Cost:</strong> ₱${totalCost.toLocaleString()}</p>
+          <p><strong>Monthly Savings:</strong> ₱${monthlySavings.toFixed(0)}</p>
+          <p><strong>Payback Period:</strong> ${Math.min(paybackPeriod, 10)} years</p>
+          <p><strong>System Efficiency:</strong> ${Math.round(systemEfficiency * 100)}%</p>
+          <p><strong>Days in Month:</strong> ${daysInMonth} days</p>
+        </div>
+      `;
+    }
+
+    // Solar Estimation Functions
+    function estimateSolarSystem() {
+      const monthlyBill = parseFloat(document.getElementById('estimateMonthlyBill').value);
+      const roofArea = parseFloat(document.getElementById('estimateRoofArea').value);
+      const usageHours = parseFloat(document.getElementById('estimateUsageHours').value);
+      const location = document.getElementById('estimateLocation').value;
+      const systemType = document.getElementById('estimateSystemType').value;
+
+      // Validate inputs
+      if (isNaN(monthlyBill) || isNaN(roofArea) || isNaN(usageHours) || !location || !systemType) {
+        alert('Please fill in all required fields');
+        return;
+      }
+
+      // Constants
+      const panelSize = 300; // Standard panel size in watts
+      const panelArea = 1.6; // Standard panel area in sqm
+      const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+      
+      // Location-based sun hours
+      const sunHours = {
+        'naga': 4.5,  // Naga City
+        'legazpi': 4.5,  // Legazpi City
+        'iriga': 5.0,  // Iriga City
+        'tabaco': 4.5,   // Tabaco City
+        'sorsogon': 5.0,   // Sorsogon City
+        'masbate': 5.5   // Masbate City
+      };
+
+      // Calculate maximum possible panels based on roof area
+      const maxPanels = Math.floor(roofArea / panelArea);
+
+      // Calculate energy requirements
+      const dailyKWh = monthlyBill / daysInMonth;
+      const requiredWatts = Math.ceil(dailyKWh * 1000 / (sunHours[location] * 0.75));
+      
+      // Calculate recommended system size
+      const recommendedPanels = Math.min(Math.ceil(requiredWatts / panelSize), maxPanels);
+      const systemSize = recommendedPanels * panelSize;
+
+      // Calculate battery requirements for off-grid systems
+      let batteryCapacity = 0;
+      if (systemType === 'off-grid' || systemType === 'hybrid') {
+        const dailyBackupEnergy = dailyKWh * (usageHours / 24);
+        batteryCapacity = Math.ceil(dailyBackupEnergy * 1000 * 1.2); // 20% buffer
+      }
+
+      // Calculate estimated energy production in kWh
+      const estimatedProduction = (systemSize * sunHours[location] * daysInMonth * 0.75) / 1000;
+
+      // Calculate system cost (updated with more accurate pricing)
+      const panelCost = 15000; // Cost per 300W panel in ₱
+      const inverterCost = systemType === 'off-grid' ? 80000 : 50000; // More expensive for off-grid
+      const installationCost = 20000 + (recommendedPanels * 1000); // Base + per panel
+      const batteryCost = batteryCapacity > 0 ? Math.ceil(batteryCapacity * 15) : 0; // ~₱15/Wh
+      
+      const totalCost = (recommendedPanels * panelCost) + inverterCost + installationCost + batteryCost;
+
+      // Calculate monthly savings (75% of current bill)
+      const monthlySavings = monthlyBill * 0.75;
+      const yearlySavings = monthlySavings * 12;
+
+      // Calculate payback period in years
+      const paybackPeriod = totalCost / yearlySavings;
+
+      // Calculate system coverage (percentage of roof used)
+      const systemCoverage = ((recommendedPanels * panelArea) / roofArea) * 100;
+
+      // Display results
+      const results = document.getElementById('estimateResults');
+      results.innerHTML = `
+        <div class="alert alert-success">
+          <h5>Solar System Estimation Results:</h5>
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>System Size:</strong> ${systemSize}W (${recommendedPanels} x ${panelSize}W panels)</p>
+              <p><strong>Battery Capacity:</strong> ${batteryCapacity > 0 ? Math.round(batteryCapacity/1000) + 'kWh' : 'Not Required'}</p>
+              <p><strong>Roof Coverage:</strong> ${(recommendedPanels * panelArea).toFixed(1)} sqm (${systemCoverage.toFixed(1)}% of available)</p>
+              <p><strong>Estimated Production:</strong> ${estimatedProduction.toFixed(0)} kWh/month</p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Estimated Cost:</strong> ₱${totalCost.toLocaleString()}</p>
+              <p><strong>Monthly Savings:</strong> ₱${monthlySavings.toFixed(0)}</p>
+              <p><strong>Yearly Savings:</strong> ₱${yearlySavings.toFixed(0)}</p>
+              <p><strong>Payback Period:</strong> ${paybackPeriod.toFixed(1)} years</p>
+            </div>
+          </div>
+          <div class="mt-3">
+            <p class="mb-1"><small class="text-muted">Note: These are estimates. Actual results may vary based on installation conditions and actual usage patterns.</small></p>
+          </div>
+        </div>
+      `;
+    }
+
+    // Solar Simulation Functions
+    function simulateSolarPower() {
+      const panelCount = parseInt(document.getElementById('panelCount').value);
+      const panelWattage = parseInt(document.getElementById('panelWattage').value);
+      const location = document.getElementById('location').value;
+      const systemEfficiency = parseFloat(document.getElementById('systemEfficiency').value) / 100;
+      const monthlyBill = parseFloat(document.getElementById('monthlyBill').value);
+      const usagePattern = document.getElementById('usagePattern').value;
+
+      // Validate inputs
+      if (isNaN(panelCount) || isNaN(panelWattage) || !location || isNaN(systemEfficiency) || 
+          isNaN(monthlyBill) || !usagePattern) {
+        alert('Please fill in all required fields');
+        return;
+      }
+
+      // Constants
+      const panelArea = 1.6; // Standard panel area in sqm
+      const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+      
+      // Location-based sun hours
+      const sunHours = {
+        'naga': 3.5,  // Naga City
+        'legazpi': 3.5,  // Legazpi City
+        'iriga': 4,  // Iriga City
+        'tabaco': 4,   // Tabaco City
+        'sorsogon': 4.5,   // Sorsogon City
+        'masbate': 4.5   // Masbate City
+      };
+
+      // Calculate system specifications
+      const systemSize = panelCount * panelWattage;
+      const totalArea = panelCount * panelArea;
+
+      // Calculate monthly energy production with seasonal variation
+      const monthlyProduction = [];
+      const monthlySunHours = [3.5, 3.5, 4, 4.5, 5, 5.5, 5.5, 5, 4.5, 4, 3.5, 3.5]; // Based on Philippine solar data
+
+      for (let month = 0; month < 12; month++) {
+        const monthlyEnergy = Math.round((systemSize * monthlySunHours[month] * daysInMonth * 
+                            systemEfficiency * 0.75) / 1000); // Include 25% system losses
+        monthlyProduction.push(monthlyEnergy);
+      }
+
+      // Calculate yearly production
+      const yearlyEnergy = monthlyProduction.reduce((sum, value) => sum + value, 0);
+
+      // Calculate savings based on usage pattern
+      let monthlySavings = 0;
+      let yearlySavings = 0;
+      const dailyKWh = monthlyBill / daysInMonth;
+
+      switch(usagePattern) {
+        case 'even':
+          monthlySavings = dailyKWh * daysInMonth * 0.5; // 50% reduction
+          break;
+        case 'day-heavy':
+          monthlySavings = dailyKWh * daysInMonth * 0.7; // 70% reduction
+          break;
+        case 'night-heavy':
+          monthlySavings = dailyKWh * daysInMonth * 0.3; // 30% reduction
+          break;
+      }
+      yearlySavings = monthlySavings * 12;
+
+      // Calculate energy production
+      const energyProduction = Math.round(systemSize * sunHours[location] * daysInMonth * 
+                                         systemEfficiency);
+
+      // Display results
+      const results = document.getElementById('simulationResults');
+      results.innerHTML = `
+        <div class="alert alert-success">
+          <h5>Simulation Results:</h5>
+          <p><strong>System Size:</strong> ${systemSize}W</p>
+          <p><strong>Total Area:</strong> ${totalArea.toFixed(1)} sqm</p>
+          <p><strong>Monthly Production:</strong> ${monthlyProduction[0]} kWh</p>
+          <p><strong>Yearly Production:</strong> ${yearlyEnergy} kWh</p>
+          <p><strong>Monthly Savings:</strong> ₱${monthlySavings.toFixed(0)}</p>
+          <p><strong>Yearly Savings:</strong> ₱${yearlySavings.toFixed(0)}</p>
+          <p><strong>System Efficiency:</strong> ${Math.round(systemEfficiency * 100)}%</p>
+          <p><strong>Days in Month:</strong> ${daysInMonth} days</p>
+        </div>
+      `;
+    }
+
+    // Add event listeners
+    document.getElementById('solarCalculatorForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      calculateSolarSystem();
+    });
+
+    document.getElementById('solarEstimateForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      estimateSolarSystem();
+    });
+
+    document.getElementById('simulationForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      simulateSolarPower();
+    });
+
+    // Reset functions
+    function resetCalculator() {
+      document.getElementById('solarCalculatorForm').reset();
+      document.getElementById('calculatorResults').innerHTML = '';
+    }
+
+    function resetEstimator() {
+      document.getElementById('solarEstimateForm').reset();
+      document.getElementById('estimateResults').innerHTML = '';
+    }
+
+    function resetSimulation() {
+      document.getElementById('simulationForm').reset();
+      document.getElementById('simulationResults').innerHTML = '';
+    }
   </script>
 
   <!-- Shopping Cart Modal -->
   <div class="modal fade" id="cartModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Shopping Cart</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">
+            <i class="bi bi-cart3 me-2"></i>Your Shopping Cart
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body p-0">
           <div id="cart-items" class="cart-items">
+            <!-- Empty cart message -->
+            <div id="empty-cart-message" class="text-center py-5">
+              <i class="bi bi-cart-x text-muted" style="font-size: 3rem;"></i>
+              <p class="mt-3 text-muted">Your cart is empty</p>
+            </div>
             <!-- Cart items will be dynamically added here -->
           </div>
-          <div class="cart-total mt-3">
-            <h6 class="text-end">Total: <span id="cart-total">₱0.00</span></h6>
+          <div class="cart-summary p-4 border-top">
+            <div class="d-flex justify-content-between mb-2">
+              <span>Subtotal:</span>
+              <span id="cart-subtotal" class="fw-bold">₱0.00</span>
+            </div>
+            <div class="d-flex justify-content-between mb-3">
+              <span>Shipping:</span>
+              <span class="text-success">Calculated at checkout</span>
+            </div>
+            <div class="d-flex justify-content-between border-top pt-2">
+              <h5 class="mb-0">Total:</h5>
+              <h4 class="mb-0 text-primary" id="cart-total">₱0.00</h4>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Proceed to Checkout</button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            <i class="bi bi-arrow-left me-1"></i> Continue Shopping
+          </button>
+          <button type="button" class="btn btn-primary" id="proceedToCheckout">
+            Proceed to Checkout <i class="bi bi-arrow-right ms-1"></i>
+          </button>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Cart Confirmation Modal -->
+  <div id="cartConfirmationModal" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Item Added to Cart</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <i class="bi bi-cart-check-fill text-success" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+          <h5 id="addedProductName"></h5>
+          <p>Successfully added to your cart!</p>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn btn-outline-secondary" id="revertAddToCart">Undo</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Continue Shopping</button>
+          <button type="button" class="btn btn-success" id="viewCartBtn">
+            View Cart & Checkout
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Function to remove modal backdrop and enable page scrolling
+    function removeModalBackdrop() {
+      const backdrops = document.querySelectorAll('.modal-backdrop');
+      backdrops.forEach(backdrop => backdrop.remove());
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+    }
+
+    // Function to show cart confirmation popup
+    function showCartConfirmation(product) {
+      const modalElement = document.getElementById('cartConfirmationModal');
+      const modal = new bootstrap.Modal(modalElement);
+      
+      // Update product name in the modal
+      document.getElementById('addedProductName').textContent = product.name;
+      
+      // Remove any existing event listeners
+      const revertBtn = document.getElementById('revertAddToCart');
+      const viewCartBtn = document.getElementById('viewCartBtn');
+      
+      const newRevertBtn = revertBtn.cloneNode(true);
+      const newViewCartBtn = viewCartBtn.cloneNode(true);
+      
+      revertBtn.parentNode.replaceChild(newRevertBtn, revertBtn);
+      viewCartBtn.parentNode.replaceChild(newViewCartBtn, viewCartBtn);
+      
+      // Set up new event listeners
+      newRevertBtn.addEventListener('click', function revertHandler() {
+        // Remove the item or decrease quantity
+        if (product.quantity > 1) {
+          product.quantity -= 1;
+        } else {
+          const itemIndex = cart.findIndex(item => item.id === product.id);
+          if (itemIndex > -1) {
+            cart.splice(itemIndex, 1);
+          }
+        }
+        
+        updateCartCount();
+        updateCartTotal();
+        updateCartDisplay();
+        
+        // Close the modal
+        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+        if (modalInstance) {
+          modalInstance.hide();
+        }
+      });
+      
+      newViewCartBtn.addEventListener('click', function() {
+        // Close the current modal
+        modal.hide();
+        
+        // Show the cart modal after a short delay to allow the current modal to close
+        setTimeout(() => {
+          const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
+          cartModal.show();
+        }, 150);
+      });
+      
+      // Handle modal hidden event to clean up
+      modalElement.addEventListener('hidden.bs.modal', function() {
+        removeModalBackdrop();
+      });
+      
+      // Show the modal
+      modal.show();
+    }
+  </script>
+
+  <!-- Admin Panel JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Admin login functionality
+      const adminLoginLink = document.getElementById('adminLoginLink');
+      const adminLoginModal = new bootstrap.Modal(document.getElementById('adminLoginModal'));
+      const adminPanel = document.getElementById('adminPanel');
+      const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+      const adminLoginForm = document.getElementById('adminLoginForm');
+      
+      // Check if user is already logged in
+      if (localStorage.getItem('adminLoggedIn') === 'true') {
+        adminPanel.style.display = 'block';
+      }
+
+      // Show login modal when admin link is clicked
+      adminLoginLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        adminLoginModal.show();
+      });
+
+      // Handle login form submission
+      adminLoginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        
+        // In a real application, you would validate credentials on the server
+        // This is a simple example - in production, use proper authentication
+        if (username === 'admin' && password === 'admin123') {
+          localStorage.setItem('adminLoggedIn', 'true');
+          adminPanel.style.display = 'block';
+          adminLoginModal.hide();
+          // Scroll to admin panel
+          adminPanel.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          alert('Invalid credentials');
+        }
+      });
+
+      // Handle logout
+      adminLogoutBtn.addEventListener('click', function() {
+        localStorage.removeItem('adminLoggedIn');
+        adminPanel.style.display = 'none';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // Admin panel button handlers
+      document.getElementById('manageProductsBtn').addEventListener('click', function() {
+        alert('Product management functionality will be implemented here');
+        // Add your product management logic here
+      });
+
+      document.getElementById('viewOrdersBtn').addEventListener('click', function() {
+        alert('Order management functionality will be implemented here');
+        // Add your order management logic here
+      });
+
+      document.getElementById('viewAnalyticsBtn').addEventListener('click', function() {
+        alert('Analytics functionality will be implemented here');
+        // Add your analytics logic here
+      });
+    });
+  </script>
 
 </body>
 

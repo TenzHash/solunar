@@ -182,4 +182,164 @@
   window.addEventListener('load', navmenuScrollspy);
   document.addEventListener('scroll', navmenuScrollspy);
 
+  // Initialize cart
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+  function updateCartDisplay() {
+    const cartItems = document.getElementById('cartItems');
+    const subtotal = document.getElementById('subtotal');
+    const total = document.getElementById('total');
+    
+    // Clear existing items
+    cartItems.innerHTML = '';
+    
+    let totalAmount = 0;
+    
+    // Add cart items
+    cart.forEach(item => {
+        const itemElement = document.createElement('div');
+        itemElement.className = 'cart-item';
+        itemElement.innerHTML = `
+            <div class="item-details">
+                <h5>${item.name}</h5>
+                <p>₱${item.price.toFixed(2)}</p>
+            </div>
+            <div class="item-quantity">
+                <button class="quantity-btn minus" onclick="updateQuantity('${item.id}', -1)">-</button>
+                <span class="quantity">${item.quantity}</span>
+                <button class="quantity-btn plus" onclick="updateQuantity('${item.id}', 1)">+</button>
+            </div>
+            <button class="remove-item" onclick="removeFromCart('${item.id}')">Remove</button>
+        `;
+        cartItems.appendChild(itemElement);
+        
+        totalAmount += item.price * item.quantity;
+    });
+    
+    subtotal.textContent = `₱${totalAmount.toFixed(2)}`;
+    total.textContent = `₱${totalAmount.toFixed(2)}`;
+  }
+
+  function addToCart(product) {
+    const existingItem = cart.find(item => item.id === product.id);
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            quantity: 1
+        });
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartDisplay();
+  }
+
+  function updateQuantity(productId, change) {
+    const item = cart.find(item => item.id === productId);
+    if (item) {
+        item.quantity += change;
+        if (item.quantity < 1) {
+            removeFromCart(productId);
+        } else {
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartDisplay();
+        }
+    }
+  }
+
+  function removeFromCart(productId) {
+    cart = cart.filter(item => item.id !== productId);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartDisplay();
+  }
+
+  // Checkout Modal functionality
+  const checkoutModal = new bootstrap.Modal(document.getElementById('checkoutModal'));
+
+  function updateCheckoutModal() {
+    // Get cart items and calculate totals
+    let subtotal = 0;
+    cart.forEach(item => {
+        subtotal += item.price * item.quantity;
+    });
+
+    // Update modal summary
+    document.getElementById('modalSubtotal').textContent = `₱${subtotal.toFixed(2)}`;
+    document.getElementById('modalShipping').textContent = `₱0.00`;
+    document.getElementById('modalTotal').textContent = `₱${subtotal.toFixed(2)}`;
+  }
+
+  // Show checkout modal when checkout button is clicked
+  document.getElementById('checkoutBtn').addEventListener('click', () => {
+    updateCheckoutModal();
+    checkoutModal.show();
+  });
+
+  // Handle complete order
+  document.getElementById('completeOrder').addEventListener('click', () => {
+    // Validate form
+    const form = document.getElementById('checkoutForm');
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+
+    // Process order (implement your order processing logic here)
+    alert('Order completed successfully!');
+    checkoutModal.hide();
+    // Clear cart after successful order
+    cart = [];
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartDisplay();
+  });
+
+  // Initialize cart display
+  document.addEventListener('DOMContentLoaded', () => {
+    updateCartDisplay();
+  });
+
 })();
+
+// Update your login form submission
+document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+
+  try {
+    const response = await fetch('https://yourdomain.com/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+      },
+      credentials: 'include',
+      body: JSON.stringify({ username, password })
+    });
+
+    const data = await response.json();
+    
+    if (response.ok) {
+      // Update UI for logged-in state
+      adminPanel.style.display = 'block';
+      adminLoginModal.hide();
+      adminPanel.scrollIntoView({ behavior: 'smooth' });
+      
+      // Store CSRF token for future requests
+      if (data.csrfToken) {
+        const meta = document.createElement('meta');
+        meta.name = 'csrf-token';
+        meta.content = data.csrfToken;
+        document.head.appendChild(meta);
+      }
+    } else {
+      alert(data.error || 'Login failed');
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    alert('An error occurred during login');
+  }
+});
+
