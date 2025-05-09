@@ -3,7 +3,7 @@ class Database {
     private $host = "localhost";
     private $db_name = "solunar_db";
     private $username = "root";
-    private $password = "";
+    private $password = "Tj09129337422@";
     public $conn;
 
     public function getConnection() {

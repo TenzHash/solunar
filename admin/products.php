@@ -1,264 +1,247 @@
 <?php
 session_start();
-if(!isset($_SESSION['admin']) || $_SESSION['admin'] !== true) {
+require_once '../config/database.php';
+
+// Check if admin is logged in
+if (!isset($_SESSION['admin_id'])) {
     header('Location: login.php');
-    exit();
+    exit;
 }
+
+// Handle product deletion
+if (isset($_POST['delete_product'])) {
+    $product_id = (int)$_POST['product_id'];
+    $stmt = $conn->prepare("DELETE FROM products WHERE id = ?");
+    $stmt->bind_param("i", $product_id);
+    if ($stmt->execute()) {
+        // Log activity
+        $stmt = $conn->prepare("INSERT INTO activity_logs (admin_id, action, entity_type, entity_id) VALUES (?, 'delete', 'product', ?)");
+        $stmt->bind_param("ii", $_SESSION['admin_id'], $product_id);
+        $stmt->execute();
+        
+        header('Location: products.php?message=Product deleted successfully');
+        exit;
+    }
+}
+
+// Get all products with pagination
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$per_page = 10;
+$offset = ($page - 1) * $per_page;
+
+$search = isset($_GET['search']) ? $_GET['search'] : '';
+$category = isset($_GET['category']) ? $_GET['category'] : '';
+
+$where_clause = [];
+$params = [];
+$types = '';
+
+if ($search) {
+    $where_clause[] = "(name LIKE ? OR description LIKE ?)";
+    $search_param = "%$search%";
+    $params[] = $search_param;
+    $params[] = $search_param;
+    $types .= 'ss';
+}
+
+if ($category) {
+    $where_clause[] = "category = ?";
+    $params[] = $category;
+    $types .= 's';
+}
+
+$where_sql = $where_clause ? 'WHERE ' . implode(' AND ', $where_clause) : '';
+
+// Get total count for pagination
+$count_sql = "SELECT COUNT(*) as count FROM products $where_sql";
+if ($params) {
+    $stmt = $conn->prepare($count_sql);
+    $stmt->bind_param($types, ...$params);
+    $stmt->execute();
+    $total_products = $stmt->get_result()->fetch_assoc()['count'];
+} else {
+    $total_products = $conn->query($count_sql)->fetch_assoc()['count'];
+}
+
+$total_pages = ceil($total_products / $per_page);
+
+// Get products
+$sql = "SELECT * FROM products $where_sql ORDER BY created_at DESC LIMIT ? OFFSET ?";
+$stmt = $conn->prepare($sql);
+if ($params) {
+    $params[] = $per_page;
+    $params[] = $offset;
+    $types .= 'ii';
+    $stmt->bind_param($types, ...$params);
+} else {
+    $stmt->bind_param('ii', $per_page, $offset);
+}
+$stmt->execute();
+$products = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Product Management</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Products Management - Solunar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background: #343a40;
+            color: white;
+        }
+        .sidebar .nav-link {
+            color: rgba(255,255,255,.8);
+        }
+        .sidebar .nav-link:hover {
+            color: white;
+        }
+        .sidebar .nav-link.active {
+            color: white;
+            background: rgba(255,255,255,.1);
+        }
+        .main-content {
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-4">
-        <h2>Product Management</h2>
-        
-        <!-- Add Product Form -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h4>Add New Product</h4>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 px-0 sidebar">
+                <div class="p-3">
+                    <img src="../assets/images/logo.png" alt="Solunar Logo" class="img-fluid mb-4">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.php">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="products.php">
+                                <i class="bi bi-box"></i> Products
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="reviews.php">
+                                <i class="bi bi-star"></i> Reviews
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="admins.php">
+                                <i class="bi bi-people"></i> Admin Accounts
+                            </a>
+                        </li>
+                        <li class="nav-item mt-4">
+                            <a class="nav-link text-danger" href="logout.php">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="card-body">
-                <form id="addProductForm">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="name" class="form-label">Product Name</label>
-                            <input type="text" class="form-control" id="name" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="price" class="form-label">Price</label>
-                            <input type="number" class="form-control" id="price" step="0.01" required>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea class="form-control" id="description" rows="3"></textarea>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label for="category" class="form-label">Category</label>
-                            <select class="form-select" id="category" required>
-                                <option value="solar_panel">Solar Panel</option>
-                                <option value="battery">Battery</option>
-                                <option value="inverter">Inverter</option>
-                                <option value="accessories">Accessories</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="image_url" class="form-label">Image URL</label>
-                            <input type="url" class="form-control" id="image_url">
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="stock" class="form-label">Stock</label>
-                            <input type="number" class="form-control" id="stock" required>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Add Product</button>
-                </form>
-            </div>
-        </div>
 
-        <!-- Products List -->
-        <div class="card">
-            <div class="card-header">
-                <h4>Products List</h4>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Category</th>
-                                <th>Price</th>
-                                <th>Stock</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="productsList">
-                            <!-- Products will be loaded here -->
-                        </tbody>
-                    </table>
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Products Management</h2>
+                    <a href="add_product.php" class="btn btn-primary">
+                        <i class="bi bi-plus"></i> Add New Product
+                    </a>
+                </div>
+
+                <?php if (isset($_GET['message'])): ?>
+                    <div class="alert alert-success">
+                        <?php echo htmlspecialchars($_GET['message']); ?>
+                    </div>
+                <?php endif; ?>
+
+                <!-- Filters -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <form method="GET" class="row g-3">
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" name="search" placeholder="Search products..." value="<?php echo htmlspecialchars($search); ?>">
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" name="category">
+                                    <option value="">All Categories</option>
+                                    <option value="solar_panel" <?php echo $category === 'solar_panel' ? 'selected' : ''; ?>>Solar Panels</option>
+                                    <option value="battery" <?php echo $category === 'battery' ? 'selected' : ''; ?>>Batteries</option>
+                                    <option value="inverter" <?php echo $category === 'inverter' ? 'selected' : ''; ?>>Inverters</option>
+                                    <option value="accessories" <?php echo $category === 'accessories' ? 'selected' : ''; ?>>Accessories</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary w-100">Filter</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Products Table -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Category</th>
+                                        <th>Price</th>
+                                        <th>Stock</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($products as $product): ?>
+                                    <tr>
+                                        <td><?php echo $product['id']; ?></td>
+                                        <td><?php echo htmlspecialchars($product['name']); ?></td>
+                                        <td><?php echo ucfirst(str_replace('_', ' ', $product['category'])); ?></td>
+                                        <td>$<?php echo number_format($product['price'], 2); ?></td>
+                                        <td><?php echo $product['stock']; ?></td>
+                                        <td>
+                                            <a href="edit_product.php?id=<?php echo $product['id']; ?>" class="btn btn-sm btn-primary">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <form method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                                <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+                                                <button type="submit" name="delete_product" class="btn btn-sm btn-danger">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <?php if ($total_pages > 1): ?>
+                        <nav class="mt-4">
+                            <ul class="pagination justify-content-center">
+                                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                <li class="page-item <?php echo $i === $page ? 'active' : ''; ?>">
+                                    <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>&category=<?php echo urlencode($category); ?>">
+                                        <?php echo $i; ?>
+                                    </a>
+                                </li>
+                                <?php endfor; ?>
+                            </ul>
+                        </nav>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Edit Product Modal -->
-    <div class="modal fade" id="editProductModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Product</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="editProductForm">
-                        <input type="hidden" id="edit_id">
-                        <div class="mb-3">
-                            <label for="edit_name" class="form-label">Product Name</label>
-                            <input type="text" class="form-control" id="edit_name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="edit_description" class="form-label">Description</label>
-                            <textarea class="form-control" id="edit_description" rows="3"></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="edit_price" class="form-label">Price</label>
-                            <input type="number" class="form-control" id="edit_price" step="0.01" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="edit_category" class="form-label">Category</label>
-                            <select class="form-select" id="edit_category" required>
-                                <option value="solar_panel">Solar Panel</option>
-                                <option value="battery">Battery</option>
-                                <option value="inverter">Inverter</option>
-                                <option value="accessories">Accessories</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="edit_image_url" class="form-label">Image URL</label>
-                            <input type="url" class="form-control" id="edit_image_url">
-                        </div>
-                        <div class="mb-3">
-                            <label for="edit_stock" class="form-label">Stock</label>
-                            <input type="number" class="form-control" id="edit_stock" required>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveEditBtn">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Load products
-        function loadProducts() {
-            fetch('../api/products/read.php')
-                .then(response => response.json())
-                .then(data => {
-                    const productsList = document.getElementById('productsList');
-                    productsList.innerHTML = '';
-                    
-                    data.records.forEach(product => {
-                        productsList.innerHTML += `
-                            <tr>
-                                <td>${product.id}</td>
-                                <td>${product.name}</td>
-                                <td>${product.category}</td>
-                                <td>₱${product.price}</td>
-                                <td>${product.stock}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary" onclick="editProduct(${JSON.stringify(product).replace(/"/g, '&quot;')})">Edit</button>
-                                    <button class="btn btn-sm btn-danger" onclick="deleteProduct(${product.id})">Delete</button>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                })
-                .catch(error => console.error('Error:', error));
-        }
-
-        // Add product
-        document.getElementById('addProductForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const product = {
-                name: document.getElementById('name').value,
-                description: document.getElementById('description').value,
-                price: document.getElementById('price').value,
-                category: document.getElementById('category').value,
-                image_url: document.getElementById('image_url').value,
-                stock: document.getElementById('stock').value
-            };
-
-            fetch('../api/products/create.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(product)
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-                loadProducts();
-                this.reset();
-            })
-            .catch(error => console.error('Error:', error));
-        });
-
-        // Edit product
-        function editProduct(product) {
-            document.getElementById('edit_id').value = product.id;
-            document.getElementById('edit_name').value = product.name;
-            document.getElementById('edit_description').value = product.description;
-            document.getElementById('edit_price').value = product.price;
-            document.getElementById('edit_category').value = product.category;
-            document.getElementById('edit_image_url').value = product.image_url;
-            document.getElementById('edit_stock').value = product.stock;
-            
-            new bootstrap.Modal(document.getElementById('editProductModal')).show();
-        }
-
-        // Save edit
-        document.getElementById('saveEditBtn').addEventListener('click', function() {
-            const product = {
-                id: document.getElementById('edit_id').value,
-                name: document.getElementById('edit_name').value,
-                description: document.getElementById('edit_description').value,
-                price: document.getElementById('edit_price').value,
-                category: document.getElementById('edit_category').value,
-                image_url: document.getElementById('edit_image_url').value,
-                stock: document.getElementById('edit_stock').value
-            };
-
-            fetch('../api/products/update.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(product)
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-                bootstrap.Modal.getInstance(document.getElementById('editProductModal')).hide();
-                loadProducts();
-            })
-            .catch(error => console.error('Error:', error));
-        });
-
-        // Delete product
-        function deleteProduct(id) {
-            if(confirm('Are you sure you want to delete this product?')) {
-                fetch('../api/products/delete.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ id: id })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    alert(data.message);
-                    loadProducts();
-                })
-                .catch(error => console.error('Error:', error));
-            }
-        }
-
-        // Load products on page load
-        document.addEventListener('DOMContentLoaded', loadProducts);
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html> 
