@@ -1,26 +1,18 @@
 <?php
-class Database {
-    private $host = "localhost";
-    private $db_name = "solunar_db";
-    private $username = "root";
-    private $password = "Tj09129337422@";
-    public $conn;
+// Database configuration
+$host = "localhost";
+$db_name = "solunar_db";
+$username = "root";
+$password = "Tj09129337422@";
 
-    public function getConnection() {
-        $this->conn = null;
+// Create connection
+$conn = new mysqli($host, $username, $password, $db_name);
 
-        try {
-            $this->conn = new PDO(
-                "mysql:host=" . $this->host . ";dbname=" . $this->db_name,
-                $this->username,
-                $this->password
-            );
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch(PDOException $e) {
-            echo "Connection Error: " . $e->getMessage();
-        }
-
-        return $this->conn;
-    }
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
+
+// Set charset to utf8
+$conn->set_charset("utf8");
 ?> 

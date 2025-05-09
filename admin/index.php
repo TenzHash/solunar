@@ -1,4 +1,5 @@
 <?php
+// Start session and include database configuration
 session_start();
 require_once '../config/database.php';
 
@@ -54,6 +55,9 @@ $stmt = $conn->prepare("
 ");
 $stmt->execute();
 $low_stock_products = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+// Start output buffering
+ob_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -287,4 +291,8 @@ $low_stock_products = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html> 
+</html>
+<?php
+// End output buffering and flush
+ob_end_flush();
+?> 
