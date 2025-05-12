@@ -111,39 +111,8 @@ $products = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 <body>
     <div class="container-fluid">
         <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 px-0 sidebar">
-                <div class="p-3">
-                    <img src="../assets/images/logo.png" alt="Solunar Logo" class="img-fluid mb-4">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.php">
-                                <i class="bi bi-speedometer2"></i> Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="products.php">
-                                <i class="bi bi-box"></i> Products
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="reviews.php">
-                                <i class="bi bi-star"></i> Reviews
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="admins.php">
-                                <i class="bi bi-people"></i> Admin Accounts
-                            </a>
-                        </li>
-                        <li class="nav-item mt-4">
-                            <a class="nav-link text-danger" href="logout.php">
-                                <i class="bi bi-box-arrow-right"></i> Logout
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+                <!-- Sidebar -->
+                <?php include 'includes/sidebar.php'; ?>
 
             <!-- Main Content -->
             <div class="col-md-9 col-lg-10 main-content">
@@ -204,7 +173,7 @@ $products = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                         <td><?php echo $product['id']; ?></td>
                                         <td><?php echo htmlspecialchars($product['name']); ?></td>
                                         <td><?php echo ucfirst(str_replace('_', ' ', $product['category'])); ?></td>
-                                        <td>$<?php echo number_format($product['price'], 2); ?></td>
+                                        <td>₱<?php echo number_format($product['price'], 2); ?></td>
                                         <td><?php echo $product['stock']; ?></td>
                                         <td>
                                             <a href="edit_product.php?id=<?php echo $product['id']; ?>" class="btn btn-sm btn-primary">

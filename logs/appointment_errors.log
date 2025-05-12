@@ -1,0 +1,132 @@
+[2025-05-12 13:46:28] Received appointment request: Array
+(
+    [name] => Terrenze Josh Binamira
+    [email] => sekutsuko0204@gmail.com
+    [phone] => 09936869633
+    [date] => 2025-05-12T19:46
+    [appointment] => cleaning
+    [location] => daraga
+    [message] => terrenze pogi
+)
+
+[2025-05-12 13:46:28] Appointment saved successfully for: Terrenze Josh Binamira
+[2025-05-12 14:01:31] Received appointment request: Array
+(
+    [name] => Terrenze Josh Binamira
+    [email] => sekutsuko0204@gmail.com
+    [phone] => 09936869633
+    [date] => 2025-05-12T20:01
+    [appointment] => installation
+    [location] => daraga
+    [message] => asdasd
+)
+
+[2025-05-12 14:01:31] Appointment saved successfully for: Terrenze Josh Binamira
+[2025-05-12 14:02:38] Received appointment request: Array
+(
+    [name] => Terrenze Josh Binamira
+    [email] => sekutsuko0204@gmail.com
+    [phone] => 09936869633
+    [date] => 2025-05-12T20:02
+    [appointment] => installation
+    [location] => daraga
+    [message] => asdasda
+)
+
+[2025-05-12 14:02:38] Appointment saved successfully for: Terrenze Josh Binamira
+[2025-05-12 14:12:10] Received appointment request: Array
+(
+    [name] => Terrenze Josh Binamira
+    [email] => sekutsuko0204@gmail.com
+    [phone] => 09936869633
+    [date] => 2025-05-12T20:02
+    [appointment] => installation
+    [location] => daraga
+    [message] => asdasda
+)
+
+[2025-05-12 14:12:10] Appointment saved successfully for: Terrenze Josh Binamira
+[2025-05-12 14:12:22] Received appointment request: Array
+(
+    [name] => Terrenze Josh Binamira
+    [email] => sekutsuko0204@gmail.com
+    [phone] => 09936869633
+    [date] => 2025-05-12T20:12
+    [appointment] => repair
+    [location] => albay
+    [message] => asdas
+)
+
+[2025-05-12 14:12:22] Appointment saved successfully for: Terrenze Josh Binamira
+[2025-05-12 14:15:09] Received appointment request: Array
+(
+    [name] => Terrenze Josh Binamira
+    [email] => sekutsuko0204@gmail.com
+    [phone] => 09936869633
+    [date] => 2025-05-06T20:15
+    [appointment] => repair
+    [location] => legazpi
+    [message] => hello
+)
+
+[2025-05-12 14:15:09] Appointment saved successfully for: Terrenze Josh Binamira
+[2025-05-12 14:16:10] Received appointment request: Array
+(
+    [name] => Terrenze Josh Binamira
+    [email] => sekutsuko0204@gmail.com
+    [phone] => 09936869633
+    [date] => 2025-05-09T20:16
+    [appointment] => installation
+    [location] => albay
+    [message] => asd
+)
+
+[2025-05-12 14:16:10] Appointment saved successfully for: Terrenze Josh Binamira
+[2025-05-12 14:19:34] Received appointment request: Array
+(
+    [name] => Terrenze Josh Binamira
+    [email] => sekutsuko0204@gmail.com
+    [phone] => 09936869633
+    [date] => 2025-05-12T20:19
+    [appointment] => cleaning
+    [location] => daraga
+    [message] => asdas
+)
+
+[2025-05-12 14:19:34] Appointment saved successfully for: Terrenze Josh Binamira
+[2025-05-12 14:30:06] Received appointment request: Array
+(
+    [name] => Terrenze Josh Binamira
+    [email] => sekutsuko0204@gmail.com
+    [phone] => 09936869633
+    [date] => 2025-05-15T20:30
+    [appointment] => installation
+    [location] => camalig
+    [message] => asd
+)
+
+[2025-05-12 14:30:06] Appointment saved successfully for: Terrenze Josh Binamira
+[2025-05-12 14:34:51] Received appointment request: Array
+(
+    [name] => Terrenze Josh Binamira
+    [email] => sekutsuko0204@gmail.com
+    [phone] => 09936869633
+    [date] => 2025-05-01T20:34
+    [appointment] => cleaning
+    [location] => legazpi
+    [message] => asdasd
+)
+
+[2025-05-12 14:34:51] Appointment saved successfully for: Terrenze Josh Binamira
+[2025-05-12 14:40:21] Received appointment request: Array
+(
+    [name] => Terrenze Josh Binamira
+    [email] => sekutsuko0204@gmail.com
+    [phone] => 09936869633
+    [date] => 2025-05-08T20:40
+    [appointment] => cleaning
+    [location] => daraga
+    [message] => asda
+)
+
+[2025-05-12 14:40:21] Appointment saved successfully for: Terrenze Josh Binamira

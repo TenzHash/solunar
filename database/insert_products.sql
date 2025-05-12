@@ -23,4 +23,4 @@ INSERT INTO products (name, description, price, category, stock) VALUES
 ('Energy Meter', 'Precise energy monitoring meter for solar system performance tracking.', 699.99, 'accessories', 100),
 ('MCED', 'Multi-channel energy distribution unit for efficient power management.', 849.99, 'accessories', 100),
 ('Stick Logger', 'Compact data logger for solar system performance monitoring.', 329.99, 'accessories', 100),
-('Wireless Energy Management', 'Smart wireless energy management system for remote monitoring and control.', 499.99, 'accessories', 100); 
+('Wireless Energy Management', 'Smart wireless energy management system for remote monitoring and control.', 499.99, 'accessories', 100);

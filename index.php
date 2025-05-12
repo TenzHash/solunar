@@ -1,5 +1,4 @@
 <?php
-// Redirect to admin panel
-header('Location: admin/index.php');
+header('Location: home.html');
 exit;
 ?>

@@ -57,22 +57,31 @@
     })
     .then(response => {
       if( response.ok ) {
-        return response.text();
+        return response.json();
       } else {
         throw new Error(`${response.status} ${response.statusText} ${response.url}`); 
       }
     })
     .then(data => {
       thisForm.querySelector('.loading').classList.remove('d-block');
-      if (data.trim() == 'OK') {
+      if (data.status === 'success') {
+        thisForm.querySelector('.sent-message').innerHTML = data.message;
         thisForm.querySelector('.sent-message').classList.add('d-block');
         thisForm.reset(); 
       } else {
-        throw new Error(data ? data : 'Form submission failed and no error message returned from: ' + action); 
+        displayError(thisForm, data.message || 'Form submission failed and no error message returned from: ' + action);
       }
     })
     .catch((error) => {
-      displayError(thisForm, error);
+      if (error.message.includes('{"status":"success"')) {
+        // If the error is actually a success message, show it as success
+        thisForm.querySelector('.loading').classList.remove('d-block');
+        thisForm.querySelector('.sent-message').innerHTML = 'Your appointment request has been sent successfully. We will contact you shortly.';
+        thisForm.querySelector('.sent-message').classList.add('d-block');
+        thisForm.reset();
+      } else {
+        displayError(thisForm, error);
+      }
     });
   }
 
