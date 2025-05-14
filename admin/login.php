@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container">
         <div class="login-container">
             <div class="login-logo">
-                <img src="../assets/images/logo.png" alt="Solunar Logo">
+                <img src="../assets/images/assets/logo.png" alt="Solunar Logo">
             </div>
             <?php if (isset($error)): ?>
                 <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div>

@@ -6,6 +6,7 @@ INSERT INTO products (name, description, price, category, stock) VALUES
 ('Roof-tiles Solar Panel', 'Aesthetically pleasing solar roof tiles that blend seamlessly with your home.', 1099.99, 'solar_panel', 50);
 
 -- Insert Batteries
+
 INSERT INTO products (name, description, price, category, stock) VALUES
 ('Lithium Ion Solar Battery', 'High-performance lithium-ion battery with long cycle life and deep discharge capability.', 5699.99, 'battery', 30),
 ('Lead Acid Solar Battery', 'Reliable lead-acid battery solution for solar energy storage.', 4999.99, 'battery', 30),

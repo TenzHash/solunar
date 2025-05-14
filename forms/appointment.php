@@ -8,6 +8,13 @@ ini_set('display_errors', 1);
 // Set JSON response header
 header('Content-Type: application/json');
 
+// Check database connection
+if (!isset($conn) || $conn->connect_error) {
+    logError("Database connection failed: " . ($conn->connect_error ?? 'Connection not established'));
+    echo json_encode(['status' => 'error', 'message' => 'Database connection error. Please try again later.']);
+    exit;
+}
+
 // Log function
 function logError($message) {
     $log_dir = __DIR__ . '/../logs';
@@ -77,10 +84,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("sssssss", $name, $email, $phone, $date, $service, $location, $message);
 
         if ($stmt->execute()) {
-            logError("Appointment saved successfully for: " . $name);
-            echo json_encode(['status' => 'success', 'message' => 'Your appointment request has been sent successfully. We will contact you shortly.']);
+            // Return success response
+            echo json_encode(['status' => 'success']);
         } else {
-            throw new Exception("Execute failed: " . $stmt->error);
+            throw new Exception("Failed to save appointment: " . $stmt->error);
         }
 
         $stmt->close();

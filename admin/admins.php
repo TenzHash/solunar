@@ -2,25 +2,29 @@
 session_start();
 require_once '../config/database.php';
 
+
 // Check if admin is logged in
 if (!isset($_SESSION['admin_id'])) {
     header('Location: login.php');
     exit;
 }
 
-// Check if current admin is super admin
+// Get current admin's role
 $stmt = $conn->prepare("SELECT role FROM admin_accounts WHERE id = ?");
 $stmt->bind_param("i", $_SESSION['admin_id']);
 $stmt->execute();
 $current_admin = $stmt->get_result()->fetch_assoc();
 
-if ($current_admin['role'] !== 'super_admin') {
-    header('Location: index.php');
-    exit;
-}
+// Only super admins can perform management actions
+$is_super_admin = ($current_admin['role'] === 'super_admin');
 
 // Handle admin account creation
 if (isset($_POST['create_admin'])) {
+    if (!$is_super_admin) {
+        header('Location: admins.php?error=Access denied. Only super admins can create admin accounts.');
+        exit;
+    }
+    
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);
     $password = $_POST['password'];
@@ -65,6 +69,11 @@ if (isset($_POST['create_admin'])) {
 
 // Handle admin account update
 if (isset($_POST['update_admin'])) {
+    if (!$is_super_admin) {
+        header('Location: admins.php?error=Access denied. Only super admins can update admin accounts.');
+        exit;
+    }
+    
     $admin_id = (int)$_POST['admin_id'];
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);
@@ -113,6 +122,11 @@ if (isset($_POST['update_admin'])) {
 
 // Handle admin account deletion
 if (isset($_POST['delete_admin'])) {
+    if (!$is_super_admin) {
+        header('Location: admins.php?error=Access denied. Only super admins can delete admin accounts.');
+        exit;
+    }
+    
     $admin_id = (int)$_POST['admin_id'];
     
     // Prevent deleting self
@@ -166,21 +180,27 @@ $admins = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         .main-content {
             padding: 20px;
         }
+        .admin-badge {
+            font-size: 0.9em;
+            padding: 0.35em 0.65em;
+        }
     </style>
 </head>
 <body>
     <div class="container-fluid">
         <div class="row">
-                 <!-- Sidebar -->
-                 <?php include 'includes/sidebar.php'; ?>
+            <!-- Sidebar -->
+            <?php include 'includes/sidebar.php'; ?>
 
             <!-- Main Content -->
             <div class="col-md-9 col-lg-10 main-content">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2>Admin Accounts</h2>
+                    <?php if ($is_super_admin): ?>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createAdminModal">
                         <i class="bi bi-plus-circle"></i> Add Admin
                     </button>
+                    <?php endif; ?>
                 </div>
 
                 <?php if (isset($_GET['message'])): ?>
@@ -218,7 +238,9 @@ $admins = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                         <th>Role</th>
                                         <th>Last Login</th>
                                         <th>Created At</th>
+                                        <?php if ($is_super_admin): ?>
                                         <th>Actions</th>
+                                        <?php endif; ?>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -228,37 +250,29 @@ $admins = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                         <td><?php echo htmlspecialchars($admin['username']); ?></td>
                                         <td><?php echo htmlspecialchars($admin['email']); ?></td>
                                         <td>
-                                            <span class="badge bg-<?php echo $admin['role'] === 'super_admin' ? 'danger' : 'primary'; ?>">
+                                            <span class="badge bg-<?php echo $admin['role'] === 'super_admin' ? 'danger' : 'primary'; ?> admin-badge">
                                                 <?php echo ucfirst(str_replace('_', ' ', $admin['role'])); ?>
                                             </span>
-                                        </td>
+                                        </td>   
                                         <td><?php echo $admin['last_login'] ? date('M d, Y H:i', strtotime($admin['last_login'])) : 'Never'; ?></td>
                                         <td><?php echo date('M d, Y H:i', strtotime($admin['created_at'])); ?></td>
+                                        <?php if ($is_super_admin): ?>
                                         <td>
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown">
-                                                    Actions
+                                            <div class="d-flex gap-2">
+                                                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editAdminModal<?php echo $admin['id']; ?>">
+                                                    <i class="bi bi-pencil"></i>
                                                 </button>
-                                                <ul class="dropdown-menu">
-                                                    <li>
-                                                        <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editAdminModal<?php echo $admin['id']; ?>">
-                                                            <i class="bi bi-pencil"></i> Edit
-                                                        </button>
-                                                    </li>
-                                                    <?php if ($admin['id'] !== $_SESSION['admin_id']): ?>
-                                                    <li><hr class="dropdown-divider"></li>
-                                                    <li>
-                                                        <form method="POST" class="dropdown-item" onsubmit="return confirm('Are you sure you want to delete this admin account?');">
-                                                            <input type="hidden" name="admin_id" value="<?php echo $admin['id']; ?>">
-                                                            <button type="submit" name="delete_admin" class="btn btn-link text-danger p-0">
-                                                                <i class="bi bi-trash"></i> Delete
-                                                            </button>
-                                                        </form>
-                                                    </li>
-                                                    <?php endif; ?>
-                                                </ul>
+                                                <?php if ($admin['id'] !== $_SESSION['admin_id']): ?>
+                                                <form method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this admin account?');">
+                                                    <input type="hidden" name="admin_id" value="<?php echo $admin['id']; ?>">
+                                                    <button type="submit" name="delete_admin" class="btn btn-sm btn-danger">
+                                                        <i class="bi bi-trash"></i> 
+                                                    </button>
+                                                </form>
+                                                <?php endif; ?>
                                             </div>
                                         </td>
+                                        <?php endif; ?>
                                     </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -270,6 +284,7 @@ $admins = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         </div>
     </div>
 
+    <?php if ($is_super_admin): ?>
     <!-- Create Admin Modal -->
     <div class="modal fade" id="createAdminModal" tabindex="-1">
         <div class="modal-dialog">
@@ -350,6 +365,7 @@ $admins = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         </div>
     </div>
     <?php endforeach; ?>
+    <?php endif; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

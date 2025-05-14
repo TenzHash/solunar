@@ -120,7 +120,7 @@ ob_start();
 
                 <!-- Statistics Cards -->
                 <div class="row mb-4">
-                    <div class="col-md-4">
+                    <div class="col-md-12">
                         <div class="card stat-card bg-primary text-white">
                             <div class="card-body">
                                 <h5 class="card-title">Total Products</h5>
@@ -128,27 +128,12 @@ ob_start();
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card stat-card bg-success text-white">
-                            <div class="card-body">
-                                <h5 class="card-title">Total Reviews</h5>
-                                <h2 class="mb-0"><?php echo $total_reviews; ?></h2>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card stat-card bg-info text-white">
-                            <div class="card-body">
-                                <h5 class="card-title">Approved Reviews</h5>
-                                <h2 class="mb-0"><?php echo $approved_reviews; ?></h2>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
 
                 <div class="row">
                     <!-- Recent Activities -->
-                    <div class="col-md-6 mb-4">
+                    <div class="col-md-12 mb-4">
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="card-title mb-0">Recent Activities</h5>
@@ -169,41 +154,6 @@ ob_start();
                                             <small class="text-muted">
                                                 <?php echo date('M d, Y H:i', strtotime($activity['created_at'])); ?>
                                             </small>
-                                        </div>
-                                    </div>
-                                    <?php endforeach; ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Recent Reviews -->
-                    <div class="col-md-6 mb-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">Recent Reviews</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="list-group list-group-flush">
-                                    <?php foreach ($recent_reviews as $review): ?>
-                                    <div class="list-group-item">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <strong><?php echo htmlspecialchars($review['user_name']); ?></strong>
-                                                reviewed
-                                                <strong><?php echo htmlspecialchars($review['product_name'] ?? 'N/A'); ?></strong>
-                                                <div class="rating">
-                                                    <?php for ($i = 1; $i <= 5; $i++): ?>
-                                                        <i class="bi bi-star<?php echo $i <= $review['rating'] ? '-fill' : ''; ?>"></i>
-                                                    <?php endfor; ?>
-                                                </div>
-                                            </div>
-                                            <span class="badge bg-<?php 
-                                                echo $review['status'] === 'approved' ? 'success' : 
-                                                    ($review['status'] === 'rejected' ? 'danger' : 'warning'); 
-                                            ?>">
-                                                <?php echo ucfirst($review['status']); ?>
-                                            </span>
                                         </div>
                                     </div>
                                     <?php endforeach; ?>

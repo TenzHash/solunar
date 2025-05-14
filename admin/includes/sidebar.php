@@ -9,7 +9,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <hr>
         <ul class="nav flex-column">
             <li class="nav-item mb-3">
-                <a class="nav-link" href="/Solunar/index.php" target="_blank">
+                <a class="nav-link" href="/Solunar/home.php" target="_blank">
                     <i class="bi bi-house"></i> Back to Homepage
                 </a>
             </li>

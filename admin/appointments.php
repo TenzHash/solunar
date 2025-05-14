@@ -26,14 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && isset($_
         $status = $action === 'approve' ? 'approved' : 'rejected';
         $stmt = $conn->prepare("UPDATE appointments SET status = ? WHERE id = ?");
         $stmt->bind_param("si", $status, $appointment_id);
-        
-        if ($stmt->execute()) {
-            $_SESSION['message'] = "Appointment has been " . $status;
-            $_SESSION['message_type'] = "success";
-        } else {
-            $_SESSION['message'] = "Error updating appointment status: " . $conn->error;
-            $_SESSION['message_type'] = "error";
-        }
+        $stmt->execute();
+    } elseif ($action === 'delete') {
+        $stmt = $conn->prepare("DELETE FROM appointments WHERE id = ?");
+        $stmt->bind_param("i", $appointment_id);
+        $stmt->execute();
     }
 }
 
@@ -55,13 +52,7 @@ if ($table_check->num_rows == 0) {
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )";
     
-    if (!$conn->query($create_table)) {
-        die("Error creating table: " . $conn->error);
-    }
-    
-    // Debug message
-    $_SESSION['message'] = "Appointments table created successfully";
-    $_SESSION['message_type'] = "success";
+    $conn->query($create_table);
 }
 
 // Fetch appointments with error handling
@@ -89,6 +80,7 @@ if (isset($_GET['debug'])) {
     <title>Appointment Management - Admin Panel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         .sidebar {
             min-height: 100vh;
@@ -144,17 +136,6 @@ if (isset($_GET['debug'])) {
                     </div>
                 </div>
 
-                <?php if (isset($_SESSION['message'])): ?>
-                    <div class="alert alert-<?php echo $_SESSION['message_type']; ?> alert-dismissible fade show" role="alert">
-                        <?php 
-                        echo $_SESSION['message'];
-                        unset($_SESSION['message']);
-                        unset($_SESSION['message_type']);
-                        ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php endif; ?>
-
                 <div class="row">
                     <?php if ($result->num_rows > 0): ?>
                         <?php while($row = $result->fetch_assoc()): ?>
@@ -194,6 +175,15 @@ if (isset($_GET['debug'])) {
                                                         <i class="bi bi-x-circle"></i> Reject
                                                     </button>
                                                 </form>
+                                                <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal(<?php echo $row['id']; ?>)">
+                                                    <i class="bi bi-trash"></i> Delete
+                                                </button>
+                                            </div>
+                                        <?php else: ?>
+                                            <div class="d-flex justify-content-end">
+                                                <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal(<?php echo $row['id']; ?>)">
+                                                    <i class="bi bi-trash"></i> Delete
+                                                </button>
                                             </div>
                                         <?php endif; ?>
                                     </div>
@@ -220,5 +210,49 @@ if (isset($_GET['debug'])) {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteConfirmModalLabel">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this appointment? This action cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form id="deleteForm" method="POST" class="d-inline">
+                        <input type="hidden" name="appointment_id" id="deleteAppointmentId">
+                        <input type="hidden" name="action" value="delete">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to show delete confirmation modal
+        function showDeleteModal(appointmentId) {
+            document.getElementById('deleteAppointmentId').value = appointmentId;
+            const modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+            modal.show();
+        }
+
+        fetch('forms/get_appointments.php')
+          .then(response => response.json())
+          .then(bookedDates => {
+            flatpickr("#appointment-date", {
+              dateFormat: "Y-m-d",
+              disable: bookedDates, // disables booked dates
+              minDate: "today",     // only allow future dates
+              // Optionally, highlight available/booked dates differently with plugins or custom CSS
+            });
+          });
+    </script>
 </body>
 </html> 

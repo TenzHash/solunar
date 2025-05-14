@@ -23,7 +23,6 @@
       }
       thisForm.querySelector('.loading').classList.add('d-block');
       thisForm.querySelector('.error-message').classList.remove('d-block');
-      thisForm.querySelector('.sent-message').classList.remove('d-block');
 
       let formData = new FormData( thisForm );
 
@@ -56,31 +55,35 @@
       headers: {'X-Requested-With': 'XMLHttpRequest'}
     })
     .then(response => {
-      if( response.ok ) {
-        return response.json();
-      } else {
-        throw new Error(`${response.status} ${response.statusText} ${response.url}`); 
-      }
+      return response.text().then(text => {
+        try {
+          const data = JSON.parse(text);
+          if (data.status === 'success') {
+            thisForm.querySelector('.loading').classList.remove('d-block');
+            thisForm.reset();
+            return;
+          }
+          return data;
+        } catch (e) {
+          throw new Error(text);
+        }
+      });
     })
     .then(data => {
-      thisForm.querySelector('.loading').classList.remove('d-block');
-      if (data.status === 'success') {
-        thisForm.querySelector('.sent-message').innerHTML = data.message;
-        thisForm.querySelector('.sent-message').classList.add('d-block');
-        thisForm.reset(); 
-      } else {
+      if (data && data.status !== 'success') {
+        thisForm.querySelector('.loading').classList.remove('d-block');
         displayError(thisForm, data.message || 'Form submission failed and no error message returned from: ' + action);
       }
     })
     .catch((error) => {
-      if (error.message.includes('{"status":"success"')) {
-        // If the error is actually a success message, show it as success
-        thisForm.querySelector('.loading').classList.remove('d-block');
-        thisForm.querySelector('.sent-message').innerHTML = 'Your appointment request has been sent successfully. We will contact you shortly.';
-        thisForm.querySelector('.sent-message').classList.add('d-block');
-        thisForm.reset();
-      } else {
-        displayError(thisForm, error);
+      thisForm.querySelector('.loading').classList.remove('d-block');
+      try {
+        const errorData = JSON.parse(error.message);
+        if (errorData.status !== 'success') {
+          displayError(thisForm, errorData.message || 'An error occurred');
+        }
+      } catch (e) {
+        displayError(thisForm, 'An error occurred while submitting the form. Please try again.');
       }
     });
   }
