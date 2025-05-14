@@ -711,7 +711,8 @@
         </nav>
 
         <a class="cta-btn d-none d-sm-block" href="#appointment">Make an Appointment</a>
-
+<br>
+<br>
       </div>
 
     </div>
@@ -780,28 +781,63 @@ No shortcuts. We provide clear ROI calculations (average 4.7 years ) and ensure 
     </section><!-- /Hero Section -->
 
     <!-- About Section -->
-    <section id="about" class="about section">
-      <!-- About Us Title -->
+    <section id="about" class="about section py-5 bg-light">
+      <!-- About Title -->
       <div class="container section-title" data-aos="fade-up">
-              <h2>About Us</h2>
-              <p>Explore our range of high-quality solar products designed for seamless installation and tailored to your energy needs.</p>
-            </div><!-- About Us Title -->
-      <div class="container">
-
-        <div class="row gy-4 gx-5">
-
-          <!--<div class="col-lg-6 position-relative align-self-start" data-aos="fade-up" data-aos-delay="200">
-            <img src="assets/img/about.png" class="img-fluid" alt="">
-            <a href="" class="glightbox pulsating-play-btn"></a>
-          </div>-->
-
-          <div class="col-lg-6 content" data-aos="fade-up" data-aos-delay="100" style="background-image:url('assets/img/')">
-          </div>
-
-        </div>
-
+        <h2>About Us</h2>
+        <p>SOLUNAR is your trusted partner for clean, reliable, and cost-effective solar energy solutions in the Philippines. We empower homes and businesses to embrace sustainability and energy independence.</p>
       </div>
+      <!-- About Section Title -->
+      <div class="container">
+        <div class="row g-4 justify-content-center">
+          <!-- Card 1: What We Offer -->
+          <div class="col-lg-4 col-md-6 d-flex">
+            <div class="card h-100 shadow-sm border-0 w-100">
+              <div class="card-body d-flex flex-column justify-content-center align-items-start px-4 py-4" style="min-height:340px;">
+                <div class="mb-3">
+                  <i class="bi bi-box-seam text-warning" style="font-size:2rem;">What We Offer</i>
 
+                </div>
+                <ul class="list-unstyled mb-0 w-100">
+                  <li class="mb-3 d-flex align-items-start"><i class="bi bi-sun-fill text-warning me-3 mt-1" style="font-size:1.3rem;"></i><div><strong>Solar Panels:</strong> Efficient, durable, and built for Philippine conditions.</div></li>
+                  <li class="mb-3 d-flex align-items-start"><i class="bi bi-battery-charging text-success me-3 mt-1" style="font-size:1.3rem;"></i><div><strong>Solar Batteries:</strong> Advanced storage for power day and night.</div></li>
+                  <li class="d-flex align-items-start"><i class="bi bi-lightning-charge-fill text-primary me-3 mt-1" style="font-size:1.3rem;"></i><div><strong>Inverters:</strong> Seamless energy conversion for your needs.</div></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- Card 2: Our Services -->
+          <div class="col-lg-4 col-md-6 d-flex">
+            <div class="card h-100 shadow-sm border-0 w-100">
+              <div class="card-body d-flex flex-column justify-content-center align-items-start px-4 py-4" style="min-height:340px;">
+                <div class="mb-3">
+                  <i class="bi bi-gear-wide-connected text-info" style="font-size:2rem;">Our Services</i>
+                  </div>
+                <ul class="list-unstyled mb-0 w-100">
+                  <li class="mb-3 d-flex align-items-start"><i class="bi bi-person-check-fill text-info me-3 mt-1" style="font-size:1.3rem;"></i><div><strong>Consultation & Site Assessment:</strong> Personalized guidance and system design.</div></li>
+                  <li class="mb-3 d-flex align-items-start"><i class="bi bi-tools text-danger me-3 mt-1" style="font-size:1.3rem;"></i><div><strong>Installation:</strong> TESDA-certified professionals ensure safe, efficient setup.</div></li>
+                  <li class="d-flex align-items-start"><i class="bi bi-shield-check text-success me-3 mt-1" style="font-size:1.3rem;"></i><div><strong>Maintenance:</strong> Ongoing support to keep your system at peak performance.</div></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- Card 3: Why Choose SOLUNAR? -->
+          <div class="col-lg-4 col-md-12 d-flex">
+            <div class="card h-100 shadow-sm border-0 w-100">
+              <div class="card-body d-flex flex-column justify-content-center align-items-start px-4 py-4" style="min-height:340px;">
+                <div class="mb-3">
+                  <i class="bi bi-star-fill text-primary" style="font-size:2rem;">Why Choose SOLUNAR?</i>
+                </div>
+                <ul class="list-unstyled mb-0 w-100">
+                  <li class="mb-3 d-flex align-items-start"><i class="bi bi-award-fill text-warning me-3 mt-1" style="font-size:1.3rem;"></i><div><strong>Experience:</strong> 5+ years in the solar industry.</div></li>
+                  <li class="mb-3 d-flex align-items-start"><i class="bi bi-gem text-primary me-3 mt-1" style="font-size:1.3rem;"></i><div><strong>Quality:</strong> Premium components and proven results.</div></li>
+                  <li class="d-flex align-items-start"><i class="bi bi-heart-fill text-danger me-3 mt-1" style="font-size:1.3rem;"></i><div><strong>Integrity:</strong> Transparent ROI, honest advice, and customer-first service.</div></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
     <!-- End of About Section -->
 
@@ -1098,27 +1134,30 @@ No shortcuts. We provide clear ROI calculations (average 4.7 years ) and ensure 
         <!-- Add Review Form -->
         <div class="review-form mb-5 mt-5">
           <div class="row justify-content-center">
-            <div class="col-lg-12">
-              <div class="card shadow-sm">
-                <div class="card-body p-4">
-                  <h4 class="card-title mb-4">Share Your Experience</h4>
-                  <form id="reviewForm" class="php-email-form">
-                    <div class="row">
-                      <div class="col-md-6 form-group mb-3">
-                        <input type="text" name="name" class="form-control" id="reviewName" placeholder="Your Name" required>
+            <div class="col-lg-12 col-xl-12">
+              <div class="card shadow-lg border-0" style="border-radius: 18px; background: #f8f9fa;">
+                <div class="card-body p-5">
+                  <h4 class="card-title mb-4 text-center fw-bold" style="color: #007bff; letter-spacing: 1px;">Share Your Experience</h4>
+                  <form id="reviewForm" class="php-email-form" autocomplete="off">
+                    <div class="row g-3 align-items-center mb-3">
+                      <div class="col-md-6">
+                        <label for="reviewName" class="form-label text-muted">Name (optional)</label>
+                        <div class="input-group">
+                          <span class="input-group-text bg-white border-0"><i class="bi bi-person-circle text-primary"></i></span>
+                          <input type="text" name="name" class="form-control rounded-pill shadow-sm" id="reviewName" placeholder="Your Name" style="font-size: 1rem;">
+                        </div>
                       </div>
-                      <div class="col-md-6 form-group mb-3">
-                        <input type="email" class="form-control" name="email" id="reviewEmail" placeholder="Your Email" required>
+                      <div class="col-md-6">
+                        <label for="reviewEmail" class="form-label text-muted">Email (optional)</label>
+                        <div class="input-group">
+                          <span class="input-group-text bg-white border-0"><i class="bi bi-envelope text-primary"></i></span>
+                          <input type="email" class="form-control rounded-pill shadow-sm" name="email" id="reviewEmail" placeholder="Your Email" style="font-size: 1rem;">
+                        </div>
                       </div>
                     </div>
-                    
-                    <div class="form-group mb-3">
-                      <textarea class="form-control" name="review" id="reviewText" rows="5" placeholder="Write your review here..." required></textarea>
-                    </div>
-
-                    <div class="form-group mb-3">
-                      <label class="form-label">Rating</label>
-                      <div class="star-rating">
+                    <div class="form-group mb-4">
+                      <label class="form-label text-muted">How would you rate us?</label>
+                      <div class="star-rating d-flex align-items-center gap-2" style="font-size: 2rem;">
                         <div class="stars">
                           <span class="star" data-rating="1">★</span>
                           <span class="star" data-rating="2">★</span>
@@ -1126,13 +1165,21 @@ No shortcuts. We provide clear ROI calculations (average 4.7 years ) and ensure 
                           <span class="star" data-rating="4">★</span>
                           <span class="star" data-rating="5">★</span>
                         </div>
-                        <span class="rating-value">0</span>
+                        <span class="rating-value text-primary fw-bold" style="font-size: 1.2rem;">0</span>
                       </div>
                       <input type="hidden" name="rating" id="ratingInput" required>
                     </div>
-
-                    <div class="form-group mb-3">
-                      <select name="service" class="form-select" required>
+                    <div class="form-group mb-4">
+                      <label for="reviewText" class="form-label text-muted">Your Review <span class="text-danger">*</span></label>
+                      <textarea class="form-control rounded-4 shadow-sm" name="review" id="reviewText" rows="4" maxlength="300" placeholder="Write your review here..." required style="resize: none; font-size: 1.05rem; transition: box-shadow 0.3s;"></textarea>
+                      <div class="d-flex justify-content-between mt-1">
+                        <small class="text-muted">Max 300 characters</small>
+                        <small id="charCount" class="text-muted">0/300</small>
+                      </div>
+                    </div>
+                    <div class="form-group mb-4">
+                      <label for="reviewService" class="form-label text-muted">Service</label>
+                      <select name="service" class="form-select rounded-pill shadow-sm" id="reviewService" required style="font-size: 1rem;">
                         <option value="">Select Service</option>
                         <option value="installation">Solar Panel Installation</option>
                         <option value="maintenance">Maintenance</option>
@@ -1140,35 +1187,143 @@ No shortcuts. We provide clear ROI calculations (average 4.7 years ) and ensure 
                         <option value="consultation">Consultation</option>
                       </select>
                     </div>
-
-                    <div class="d-flex justify-content-between">
-                      <button type="reset" class="btn btn-secondary">
-                        <i class="bi bi-x-circle"></i> Reset
-                      </button>
-                      <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-send"></i> Submit Review
-                      </button>
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                      <button type="reset" class="btn btn-light border shadow-sm px-4 py-2 rounded-pill" style="transition: background 0.2s;">Reset</button>
+                      <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill fw-bold shadow" style="font-size: 1.1rem; letter-spacing: 1px; transition: background 0.2s, transform 0.2s;">Submit Review</button>
                     </div>
                   </form>
+                  <!-- Thank You Animation/Message -->
+                  <div id="reviewThankYou" class="text-center mt-5 d-none">
+                    <div class="mb-3">
+                      <i class="bi bi-emoji-smile text-primary" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="fw-bold text-success mb-2">Thank you for your review!</h5>
+                    <p class="text-muted">We appreciate your feedback. Your review will be visible after approval.</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        <style>
+        /* Review Form Enhancements */
+        .review-form .form-control:focus, .review-form .form-select:focus {
+          box-shadow: 0 0 0 0.2rem #b6d4fe;
+          border-color: #0d6efd;
+          background: #e9f3ff;
+        }
+        .review-form .star-rating .star {
+          color: #e3eafc;
+          cursor: pointer;
+          transition: color 0.2s, transform 0.2s;
+        }
+        .review-form .star-rating .star.selected,
+        .review-form .star-rating .star.hovered {
+          color: #0d6efd;
+          transform: scale(1.15);
+        }
+        .review-form .btn-primary {
+          background: linear-gradient(90deg, #007bff 60%, #0d6efd 100%);
+          border: none;
+        }
+        .review-form .btn-primary:hover {
+          background: linear-gradient(90deg, #0d6efd 60%, #007bff 100%);
+          transform: translateY(-2px) scale(1.04);
+        }
+        .review-form .btn-light:hover {
+          background: #e3eafc;
+        }
+        @media (max-width: 767px) {
+          .review-form .card-body {
+            padding: 2rem 1rem !important;
+          }
+        }
+        </style>
+
+        <script>
+        // Star rating functionality
+        document.addEventListener('DOMContentLoaded', function() {
+          const stars = document.querySelectorAll('.review-form .star');
+          const ratingValue = document.querySelector('.review-form .rating-value');
+          const ratingInput = document.getElementById('ratingInput');
+          let selectedRating = 0;
+
+          stars.forEach(star => {
+            star.addEventListener('mouseover', function() {
+              const rating = this.getAttribute('data-rating');
+              updateStars(rating);
+            });
+            star.addEventListener('mouseout', function() {
+              updateStars(selectedRating);
+            });
+            star.addEventListener('click', function() {
+              selectedRating = this.getAttribute('data-rating');
+              ratingInput.value = selectedRating;
+              updateStars(selectedRating);
+            });
+          });
+          function updateStars(rating) {
+            stars.forEach(star => {
+              const starRating = star.getAttribute('data-rating');
+              if (starRating <= rating) {
+                star.classList.add('selected');
+              } else {
+                star.classList.remove('selected');
+              }
+            });
+            ratingValue.textContent = rating;
+          }
+
+          // Character count for textarea
+          const reviewText = document.getElementById('reviewText');
+          const charCount = document.getElementById('charCount');
+          reviewText.addEventListener('input', function() {
+            charCount.textContent = `${this.value.length}/300`;
+          });
+
+          // Animated transitions for focus
+          document.querySelectorAll('.review-form .form-control, .review-form .form-select').forEach(input => {
+            input.addEventListener('focus', function() {
+              this.style.transition = 'box-shadow 0.3s, background 0.3s';
+            });
+          });
+
+          // Form submission with thank you animation
+          const reviewForm = document.getElementById('reviewForm');
+          const thankYou = document.getElementById('reviewThankYou');
+          reviewForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Validate rating
+            if (!ratingInput.value) {
+              // alert('Please select a rating');
+              return;
+            }
+            // Simulate AJAX submission
+            reviewForm.classList.add('d-none');
+            thankYou.classList.remove('d-none');
+            setTimeout(() => {
+              reviewForm.reset();
+              selectedRating = 0;
+              updateStars(0);
+              ratingInput.value = '';
+              charCount.textContent = '0/300';
+              thankYou.classList.add('d-none');
+              reviewForm.classList.remove('d-none');
+            }, 3500);
+          });
+        });
+        </script>
       </div>
     </section>
 
     <!-- Learn Section -->
-    <section id="learn" class="learn section">
-
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <h2>Learn</h2>
-        <p>Explore our interactive solar tools and simulations to better understand solar energy</p>
-      </div>
-      <!-- End Section Title -->
-
-      <div class="container">
+    <section id="learn" class="learn section position-relative">
+      <div class="container position-relative" style="z-index: 2;">
+        <div class="container section-title" data-aos="fade-up">
+          <h2>Learn</h2>
+          <p>Explore our interactive solar tools and simulations to better understand solar energy</p>
+        </div>
         <div class="row">
           <!-- Solar Calculator -->
           <div class="col-lg-4 mb-4">
@@ -1182,7 +1337,6 @@ No shortcuts. We provide clear ROI calculations (average 4.7 years ) and ensure 
               </div>
             </div>
           </div>
-
           <!-- Solar Estimation -->
           <div class="col-lg-4 mb-4">
             <div class="card h-100">
@@ -1195,7 +1349,6 @@ No shortcuts. We provide clear ROI calculations (average 4.7 years ) and ensure 
               </div>
             </div>
           </div>
-
           <!-- Solar Power Simulation -->
           <div class="col-lg-4 mb-4">
             <div class="card h-100">
@@ -1210,7 +1363,6 @@ No shortcuts. We provide clear ROI calculations (average 4.7 years ) and ensure 
           </div>
         </div>
       </div>
-
     </section>
     <!-- End of Learn Section -->
 
@@ -2585,7 +2737,10 @@ No shortcuts. We provide clear ROI calculations (average 4.7 years ) and ensure 
 
             // Validate rating
             if (!ratingInput.value) {
-                alert('Please select a rating');
+                // Show error modal for missing rating
+                const errorModal = new bootstrap.Modal(document.getElementById('reviewErrorModal'));
+                document.getElementById('reviewErrorMsg').textContent = 'Please select a rating.';
+                errorModal.show();
                 return;
             }
 
@@ -2608,12 +2763,17 @@ No shortcuts. We provide clear ROI calculations (average 4.7 years ) and ensure 
                     const successModal = new bootstrap.Modal(document.getElementById('reviewSuccessModal'));
                     successModal.show();
                 } else {
-                    alert(data.message || 'An error occurred. Please try again.');
+                    // Show error modal with message
+                    const errorModal = new bootstrap.Modal(document.getElementById('reviewErrorModal'));
+                    document.getElementById('reviewErrorMsg').textContent = data.message || 'An error occurred. Please try again.';
+                    errorModal.show();
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred. Please try again.');
+                // Show error modal for network/server errors
+                const errorModal = new bootstrap.Modal(document.getElementById('reviewErrorModal'));
+                document.getElementById('reviewErrorMsg').textContent = 'An error occurred. Please try again.';
+                errorModal.show();
             });
         });
     });
@@ -2634,6 +2794,25 @@ No shortcuts. We provide clear ROI calculations (average 4.7 years ) and ensure 
         </div>
         <div class="modal-footer justify-content-center">
           <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Review Error Modal -->
+  <div class="modal fade" id="reviewErrorModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title">Error</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <i class="bi bi-x-circle-fill text-danger" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+          <h5>Submission Failed</h5>
+          <p id="reviewErrorMsg">An error occurred. Please try again.</p>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">OK</button>
         </div>
       </div>
     </div>

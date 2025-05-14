@@ -94,6 +94,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+function formatCategoryName($cat) {
+    $cat = preg_replace('/[^a-zA-Z0-9 ]/', ' ', $cat); // Remove symbols
+    $cat = ucwords(strtolower(str_replace('_', ' ', $cat)));
+    return trim(preg_replace('/\s+/', ' ', $cat));
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -104,28 +110,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        .sidebar {
-            min-height: 100vh;
-            background: #343a40;
-            color: white;
-        }
-        .sidebar .nav-link {
-            color: rgba(255,255,255,.8);
-        }
-        .sidebar .nav-link:hover {
-            color: white;
-        }
-        .sidebar .nav-link.active {
-            color: white;
-            background: rgba(255,255,255,.1);
+        body {
+            background: #f8f9fa;
         }
         .main-content {
-            padding: 20px;
+            padding: 32px 24px 24px 24px;
+            min-height: 100vh;
+        }
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: #fff;
+            box-shadow: 0 2px 12px rgba(0,123,255,0.04);
+            border-radius: 0 0 18px 18px;
+            padding: 18px 24px 12px 24px;
+            margin-bottom: 32px;
+        }
+        .card {
+            border-radius: 16px !important;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+        .card-header {
+            border-radius: 16px 16px 0 0 !important;
+            background: #f4f8ff;
+            font-weight: 600;
+        }
+        .btn-primary {
+            border-radius: 2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(0,123,255,0.08);
+            background: linear-gradient(90deg, #007bff 60%, #0d6efd 100%);
+            border: none;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #0d6efd 60%, #007bff 100%);
+            transform: translateY(-2px) scale(1.03);
         }
         .preview-image {
             max-width: 200px;
             max-height: 200px;
             margin-top: 10px;
+        }
+        @media (max-width: 991px) {
+            .main-content { padding: 18px 4px; }
+            .topbar { padding: 12px 8px; margin-bottom: 18px; }
         }
     </style>
 </head>
@@ -136,16 +167,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php include 'includes/sidebar.php'; ?>
             <!-- Main Content -->
             <div class="col-md-9 col-lg-10 main-content">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2>Edit Product</h2>
+                <div class="topbar d-flex flex-wrap justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0 fw-bold" style="color:#007bff;">Edit Product</h2>
                     <a href="products.php" class="btn btn-secondary">
                         <i class="bi bi-arrow-left"></i> Back to Products
                     </a>
                 </div>
 
-                <?php if ($error): ?>
-                    <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div>
-                <?php endif; ?>
+                <!-- Feedback Modal -->
+                <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body" id="errorModalBody"></div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">OK</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    <?php if ($error): ?>
+                        document.getElementById('errorModalBody').innerHTML = `<?php echo htmlspecialchars($error); ?>`;
+                        var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+                        errorModal.show();
+                    <?php endif; ?>
+                });
+                </script>
 
                 <div class="card">
                     <div class="card-body">
@@ -159,10 +211,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <label for="category" class="form-label">Category *</label>
                                     <select class="form-select" id="category" name="category" required>
                                         <option value="">Select Category</option>
-                                        <option value="solar_panel" <?php echo $product['category'] === 'solar_panel' ? 'selected' : ''; ?>>Solar Panel</option>
-                                        <option value="battery" <?php echo $product['category'] === 'battery' ? 'selected' : ''; ?>>Battery</option>
-                                        <option value="inverter" <?php echo $product['category'] === 'inverter' ? 'selected' : ''; ?>>Inverter</option>
-                                        <option value="accessories" <?php echo $product['category'] === 'accessories' ? 'selected' : ''; ?>>Accessories</option>
+                                        <option value="solar_panel" <?php echo $product['category'] === 'solar_panel' ? 'selected' : ''; ?>><?php echo formatCategoryName('solar_panel'); ?></option>
+                                        <option value="battery" <?php echo $product['category'] === 'battery' ? 'selected' : ''; ?>><?php echo formatCategoryName('battery'); ?></option>
+                                        <option value="inverter" <?php echo $product['category'] === 'inverter' ? 'selected' : ''; ?>><?php echo formatCategoryName('inverter'); ?></option>
+                                        <option value="accessories" <?php echo $product['category'] === 'accessories' ? 'selected' : ''; ?>><?php echo formatCategoryName('accessories'); ?></option>
                                     </select>
                                 </div>
                             </div>
@@ -227,20 +279,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Form validation
+        // Form validation with modal
         document.getElementById('editProductForm').addEventListener('submit', function(e) {
             const price = parseFloat(document.getElementById('price').value);
             const stock = parseInt(document.getElementById('stock').value);
-            
+            let errorMsg = '';
             if (price <= 0) {
-                e.preventDefault();
-                alert('Price must be greater than 0');
-                return;
+                errorMsg = 'Price must be greater than 0';
+            } else if (stock < 0) {
+                errorMsg = 'Stock cannot be negative';
             }
-            
-            if (stock < 0) {
+            if (errorMsg) {
                 e.preventDefault();
-                alert('Stock cannot be negative');
+                document.getElementById('errorModalBody').innerHTML = errorMsg;
+                var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+                errorModal.show();
                 return;
             }
         });

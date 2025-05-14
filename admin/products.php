@@ -78,6 +78,12 @@ if ($params) {
 }
 $stmt->execute();
 $products = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+function formatCategoryName($cat) {
+    $cat = preg_replace('/[^a-zA-Z0-9 ]/', ' ', $cat); // Remove symbols
+    $cat = ucwords(strtolower(str_replace('_', ' ', $cat)));
+    return trim(preg_replace('/\s+/', ' ', $cat));
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -88,23 +94,69 @@ $products = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        .sidebar {
-            min-height: 100vh;
-            background: #343a40;
-            color: white;
-        }
-        .sidebar .nav-link {
-            color: rgba(255,255,255,.8);
-        }
-        .sidebar .nav-link:hover {
-            color: white;
-        }
-        .sidebar .nav-link.active {
-            color: white;
-            background: rgba(255,255,255,.1);
+        body {
+            background: #f8f9fa;
         }
         .main-content {
-            padding: 20px;
+            padding: 32px 24px 24px 24px;
+            min-height: 100vh;
+        }
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: #fff;
+            box-shadow: 0 2px 12px rgba(0,123,255,0.04);
+            border-radius: 0 0 18px 18px;
+            padding: 18px 24px 12px 24px;
+            margin-bottom: 32px;
+        }
+        .card, .table {
+            border-radius: 16px !important;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+        .card-header {
+            border-radius: 16px 16px 0 0 !important;
+            background: #f4f8ff;
+            font-weight: 600;
+        }
+        .btn-primary, .btn-danger {
+            border-radius: 2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(0,123,255,0.08);
+            transition: background 0.2s, transform 0.2s;
+        }
+        .btn-primary {
+            background: linear-gradient(90deg, #007bff 60%, #0d6efd 100%);
+            border: none;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #0d6efd 60%, #007bff 100%);
+            transform: translateY(-2px) scale(1.03);
+        }
+        .btn-danger {
+            background: linear-gradient(90deg, #dc3545 60%, #ff6b6b 100%);
+            border: none;
+        }
+        .btn-danger:hover {
+            background: linear-gradient(90deg, #ff6b6b 60%, #dc3545 100%);
+            transform: translateY(-2px) scale(1.03);
+        }
+        .badge {
+            border-radius: 1rem;
+            font-size: 0.95em;
+            padding: 0.4em 0.9em;
+        }
+        .table th, .table td {
+            vertical-align: middle;
+        }
+        .table-hover tbody tr:hover {
+            background: #e3f0ff;
+        }
+        @media (max-width: 991px) {
+            .main-content { padding: 18px 4px; }
+            .topbar { padding: 12px 8px; margin-bottom: 18px; }
         }
     </style>
 </head>
@@ -116,8 +168,8 @@ $products = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
             <!-- Main Content -->
             <div class="col-md-9 col-lg-10 main-content">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2>Products Management</h2>
+                <div class="topbar d-flex flex-wrap justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0 fw-bold" style="color:#007bff;">Products Management</h2>
                     <a href="add_product.php" class="btn btn-primary">
                         <i class="bi bi-plus"></i> Add New Product
                     </a>
@@ -139,10 +191,10 @@ $products = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                             <div class="col-md-3">
                                 <select class="form-select" name="category">
                                     <option value="">All Categories</option>
-                                    <option value="solar_panel" <?php echo $category === 'solar_panel' ? 'selected' : ''; ?>>Solar Panels</option>
-                                    <option value="battery" <?php echo $category === 'battery' ? 'selected' : ''; ?>>Batteries</option>
-                                    <option value="inverter" <?php echo $category === 'inverter' ? 'selected' : ''; ?>>Inverters</option>
-                                    <option value="accessories" <?php echo $category === 'accessories' ? 'selected' : ''; ?>>Accessories</option>
+                                    <option value="solar_panel" <?php echo $category === 'solar_panel' ? 'selected' : ''; ?>><?php echo formatCategoryName('solar_panel'); ?></option>
+                                    <option value="battery" <?php echo $category === 'battery' ? 'selected' : ''; ?>><?php echo formatCategoryName('battery'); ?></option>
+                                    <option value="inverter" <?php echo $category === 'inverter' ? 'selected' : ''; ?>><?php echo formatCategoryName('inverter'); ?></option>
+                                    <option value="accessories" <?php echo $category === 'accessories' ? 'selected' : ''; ?>><?php echo formatCategoryName('accessories'); ?></option>
                                 </select>
                             </div>
                             <div class="col-md-2">
@@ -156,7 +208,7 @@ $products = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table table-hover align-middle mb-0">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -172,7 +224,7 @@ $products = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                     <tr>
                                         <td><?php echo $product['id']; ?></td>
                                         <td><?php echo htmlspecialchars($product['name']); ?></td>
-                                        <td><?php echo ucfirst(str_replace('_', ' ', $product['category'])); ?></td>
+                                        <td><?php echo formatCategoryName($product['category']); ?></td>
                                         <td>₱<?php echo number_format($product['price'], 2); ?></td>
                                         <td><?php echo $product['stock']; ?></td>
                                         <td>
@@ -198,9 +250,7 @@ $products = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                             <ul class="pagination justify-content-center">
                                 <?php for ($i = 1; $i <= $total_pages; $i++): ?>
                                 <li class="page-item <?php echo $i === $page ? 'active' : ''; ?>">
-                                    <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>&category=<?php echo urlencode($category); ?>">
-                                        <?php echo $i; ?>
-                                    </a>
+                                    <a class="page-link" href="?page=<?php echo $i; ?><?php if ($search) echo '&search=' . urlencode($search); ?><?php if ($category) echo '&category=' . urlencode($category); ?>"><?php echo $i; ?></a>
                                 </li>
                                 <?php endfor; ?>
                             </ul>

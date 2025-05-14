@@ -354,3 +354,14 @@
     [message] => terter
 )
 
+[2025-05-14 16:56:52] Received appointment request: Array
+(
+    [name] => Terrenze Josh Binamira
+    [email] => sekutsuko0204@gmail.com
+    [phone] => 09936869633
+    [date] => 2025-05-24T22:56
+    [appointment] => installation
+    [location] => polangui
+    [message] => Hi, painquire po.
+)
+

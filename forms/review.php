@@ -15,14 +15,14 @@ $review = filter_input(INPUT_POST, 'review', FILTER_SANITIZE_STRING);
 $service = filter_input(INPUT_POST, 'service', FILTER_SANITIZE_STRING);
 $rating = filter_input(INPUT_POST, 'rating', FILTER_VALIDATE_INT);
 
-// Validate required fields
-if (!$name || !$email || !$review || !$service || !$rating) {
-    echo json_encode(['status' => 'error', 'message' => 'All fields are required']);
+// Validate required fields (name and email are optional)
+if (!$review || !$service || !$rating) {
+    echo json_encode(['status' => 'error', 'message' => 'Please fill in all required fields.']);
     exit;
 }
 
-// Validate email
-if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+// If email is provided, validate it
+if ($email && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
     echo json_encode(['status' => 'error', 'message' => 'Invalid email format']);
     exit;
 }

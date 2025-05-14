@@ -82,39 +82,83 @@ if (isset($_GET['debug'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
-        .sidebar {
-            min-height: 100vh;
-            background: #343a40;
-            color: white;
-        }
-        .sidebar .nav-link {
-            color: rgba(255,255,255,.8);
-        }
-        .sidebar .nav-link:hover {
-            color: white;
-        }
-        .sidebar .nav-link.active {
-            color: white;
-            background: rgba(255,255,255,.1);
+        body {
+            background: #f8f9fa;
         }
         .main-content {
-            padding: 20px;
+            padding: 32px 24px 24px 24px;
+            min-height: 100vh;
+        }
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: #fff;
+            box-shadow: 0 2px 12px rgba(0,123,255,0.04);
+            border-radius: 0 0 18px 18px;
+            padding: 18px 24px 12px 24px;
+            margin-bottom: 32px;
+        }
+        .card, .table {
+            border-radius: 16px !important;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+        .card-header {
+            border-radius: 16px 16px 0 0 !important;
+            background: #f4f8ff;
+            font-weight: 600;
+        }
+        .btn-success, .btn-danger {
+            border-radius: 2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(0,123,255,0.08);
+            transition: background 0.2s, transform 0.2s;
+        }
+        .btn-success {
+            background: linear-gradient(90deg, #28a745 60%, #51e67a 100%);
+            border: none;
+        }
+        .btn-success:hover {
+            background: linear-gradient(90deg, #51e67a 60%, #28a745 100%);
+            transform: translateY(-2px) scale(1.03);
+        }
+        .btn-danger {
+            background: linear-gradient(90deg, #dc3545 60%, #ff6b6b 100%);
+            border: none;
+        }
+        .btn-danger:hover {
+            background: linear-gradient(90deg, #ff6b6b 60%, #dc3545 100%);
+            transform: translateY(-2px) scale(1.03);
+        }
+        .badge, .status-badge {
+            border-radius: 1rem;
+            font-size: 0.95em;
+            padding: 0.4em 0.9em;
         }
         .appointment-card {
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(.39,.575,.56,1.000);
+            border-radius: 18px;
+            box-shadow: 0 2px 12px rgba(0,123,255,0.07);
+            background: linear-gradient(90deg, #e3f0ff 60%, #f8f9fa 100%);
         }
         .appointment-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 6px 24px rgba(0,123,255,0.13);
         }
         .status-badge {
             position: absolute;
             top: 10px;
             right: 10px;
+            font-weight: 600;
         }
-        .pending { background-color: #ffc107; }
-        .approved { background-color: #28a745; }
-        .rejected { background-color: #dc3545; }
+        .pending { background: #ffc107; color: #fff; }
+        .approved { background: #28a745; color: #fff; }
+        .rejected { background: #dc3545; color: #fff; }
+        @media (max-width: 991px) {
+            .main-content { padding: 18px 4px; }
+            .topbar { padding: 12px 8px; margin-bottom: 18px; }
+        }
     </style>
 </head>
 <body>
@@ -125,29 +169,20 @@ if (isset($_GET['debug'])) {
 
             <!-- Main Content -->
             <div class="col-md-9 col-lg-10 main-content">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2>Appointment Management</h2>
-                    <div>
-                        <?php if ($debug_info): ?>
-                            <div class="alert alert-info">
-                                <?php echo $debug_info; ?>
-                            </div>
-                        <?php endif; ?>
-                    </div>
+                <div class="topbar d-flex flex-wrap justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0 fw-bold" style="color:#007bff;">Appointment Management</h2>
                 </div>
-
                 <div class="row">
                     <?php if ($result->num_rows > 0): ?>
                         <?php while($row = $result->fetch_assoc()): ?>
                             <div class="col-md-6 col-lg-4 mb-4">
-                                <div class="card appointment-card">
+                                <div class="card appointment-card position-relative h-100">
                                     <div class="card-body">
                                         <span class="badge status-badge <?php echo $row['status']; ?>">
                                             <?php echo ucfirst($row['status']); ?>
                                         </span>
-                                        
-                                        <h5 class="card-title"><?php echo htmlspecialchars($row['name']); ?></h5>
-                                        <p class="card-text">
+                                        <h5 class="card-title mb-2"><?php echo htmlspecialchars($row['name']); ?></h5>
+                                        <p class="card-text mb-2">
                                             <strong>Email:</strong> <?php echo htmlspecialchars($row['email']); ?><br>
                                             <strong>Phone:</strong> <?php echo htmlspecialchars($row['phone']); ?><br>
                                             <strong>Date:</strong> <?php echo date('F j, Y g:i A', strtotime($row['appointment_date'])); ?><br>
@@ -158,9 +193,8 @@ if (isset($_GET['debug'])) {
                                                 <?php echo nl2br(htmlspecialchars($row['message'])); ?>
                                             <?php endif; ?>
                                         </p>
-
                                         <?php if ($row['status'] === 'pending'): ?>
-                                            <div class="d-flex justify-content-end gap-2">
+                                            <div class="d-flex justify-content-end gap-2 mt-3">
                                                 <form method="POST" class="d-inline">
                                                     <input type="hidden" name="appointment_id" value="<?php echo $row['id']; ?>">
                                                     <input type="hidden" name="action" value="approve">
@@ -180,7 +214,7 @@ if (isset($_GET['debug'])) {
                                                 </button>
                                             </div>
                                         <?php else: ?>
-                                            <div class="d-flex justify-content-end">
+                                            <div class="d-flex justify-content-end mt-3">
                                                 <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal(<?php echo $row['id']; ?>)">
                                                     <i class="bi bi-trash"></i> Delete
                                                 </button>
@@ -198,8 +232,7 @@ if (isset($_GET['debug'])) {
                             <div class="alert alert-info">
                                 No appointments found. 
                                 <?php if (isset($_GET['debug'])): ?>
-                                    <br>Debug: Table exists: <?php echo ($table_check->num_rows > 0 ? 'Yes' : 'No'); ?>
-                                    <br>Database: <?php echo $conn->database; ?>
+                                    <br><?php echo $debug_info; ?>
                                 <?php endif; ?>
                             </div>
                         </div>

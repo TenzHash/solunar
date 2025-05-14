@@ -162,27 +162,67 @@ $admins = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        .sidebar {
-            min-height: 100vh;
-            background: #343a40;
-            color: white;
-        }
-        .sidebar .nav-link {
-            color: rgba(255,255,255,.8);
-        }
-        .sidebar .nav-link:hover {
-            color: white;
-        }
-        .sidebar .nav-link.active {
-            color: white;
-            background: rgba(255,255,255,.1);
+        body {
+            background: #f8f9fa;
         }
         .main-content {
-            padding: 20px;
+            padding: 32px 24px 24px 24px;
+            min-height: 100vh;
+        }
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: #fff;
+            box-shadow: 0 2px 12px rgba(0,123,255,0.04);
+            border-radius: 0 0 18px 18px;
+            padding: 18px 24px 12px 24px;
+            margin-bottom: 32px;
+        }
+        .card, .table {
+            border-radius: 16px !important;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+        .card-header {
+            border-radius: 16px 16px 0 0 !important;
+            background: #f4f8ff;
+            font-weight: 600;
+        }
+        .btn-primary, .btn-danger {
+            border-radius: 2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(0,123,255,0.08);
+            transition: background 0.2s, transform 0.2s;
+        }
+        .btn-primary {
+            background: linear-gradient(90deg, #007bff 60%, #0d6efd 100%);
+            border: none;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #0d6efd 60%, #007bff 100%);
+            transform: translateY(-2px) scale(1.03);
+        }
+        .btn-danger {
+            background: linear-gradient(90deg, #dc3545 60%, #ff6b6b 100%);
+            border: none;
+        }
+        .btn-danger:hover {
+            background: linear-gradient(90deg, #ff6b6b 60%, #dc3545 100%);
+            transform: translateY(-2px) scale(1.03);
+        }
+        .badge {
+            border-radius: 1rem;
+            font-size: 0.95em;
+            padding: 0.4em 0.9em;
         }
         .admin-badge {
             font-size: 0.9em;
             padding: 0.35em 0.65em;
+        }
+        @media (max-width: 991px) {
+            .main-content { padding: 18px 4px; }
+            .topbar { padding: 12px 8px; margin-bottom: 18px; }
         }
     </style>
 </head>
@@ -194,8 +234,8 @@ $admins = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
             <!-- Main Content -->
             <div class="col-md-9 col-lg-10 main-content">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2>Admin Accounts</h2>
+                <div class="topbar d-flex flex-wrap justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0 fw-bold" style="color:#007bff;">Admin Accounts</h2>
                     <?php if ($is_super_admin): ?>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createAdminModal">
                         <i class="bi bi-plus-circle"></i> Add Admin
@@ -203,33 +243,62 @@ $admins = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                     <?php endif; ?>
                 </div>
 
-                <?php if (isset($_GET['message'])): ?>
-                    <div class="alert alert-success">
-                        <?php echo htmlspecialchars($_GET['message']); ?>
+                <!-- Feedback Modals -->
+                <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title" id="feedbackModalLabel">Success</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body" id="feedbackModalBody"></div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
+                      </div>
                     </div>
-                <?php endif; ?>
+                  </div>
+                </div>
+                <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body" id="errorModalBody"></div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">OK</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-                <?php if (isset($_GET['error'])): ?>
-                    <div class="alert alert-danger">
-                        <?php echo htmlspecialchars($_GET['error']); ?>
-                    </div>
-                <?php endif; ?>
-
-                <?php if (!empty($errors)): ?>
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                            <?php foreach ($errors as $error): ?>
-                                <li><?php echo htmlspecialchars($error); ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
-                <?php endif; ?>
+                <!-- Success/Error/Validation Feedback -->
+                <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    <?php if (isset($_GET['message'])): ?>
+                        document.getElementById('feedbackModalBody').innerHTML = `<?php echo htmlspecialchars($_GET['message']); ?>`;
+                        var feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+                        feedbackModal.show();
+                    <?php endif; ?>
+                    <?php if (isset($_GET['error'])): ?>
+                        document.getElementById('errorModalBody').innerHTML = `<?php echo htmlspecialchars($_GET['error']); ?>`;
+                        var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+                        errorModal.show();
+                    <?php endif; ?>
+                    <?php if (!empty($errors)): ?>
+                        document.getElementById('errorModalBody').innerHTML = `<ul class='mb-0'><?php foreach ($errors as $error) { echo '<li>' . htmlspecialchars($error) . '</li>'; } ?></ul>`;
+                        var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+                        errorModal.show();
+                    <?php endif; ?>
+                });
+                </script>
 
                 <!-- Admin Accounts Table -->
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table table-hover align-middle">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -263,12 +332,9 @@ $admins = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                                     <i class="bi bi-pencil"></i>
                                                 </button>
                                                 <?php if ($admin['id'] !== $_SESSION['admin_id']): ?>
-                                                <form method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this admin account?');">
-                                                    <input type="hidden" name="admin_id" value="<?php echo $admin['id']; ?>">
-                                                    <button type="submit" name="delete_admin" class="btn btn-sm btn-danger">
-                                                        <i class="bi bi-trash"></i> 
-                                                    </button>
-                                                </form>
+                                                <button type="button" class="btn btn-sm btn-danger" onclick="showDeleteModal(<?php echo $admin['id']; ?>, '<?php echo htmlspecialchars(addslashes($admin['username'])); ?>')">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
                                                 <?php endif; ?>
                                             </div>
                                         </td>
@@ -365,6 +431,36 @@ $admins = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         </div>
     </div>
     <?php endforeach; ?>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST" id="deleteAdminForm">
+                    <input type="hidden" name="admin_id" id="deleteAdminId">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="deleteConfirmModalLabel">Confirm Deletion</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete admin <span id="deleteAdminUsername" class="fw-bold"></span>? This action cannot be undone.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" name="delete_admin" class="btn btn-danger">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+    function showDeleteModal(adminId, username) {
+        document.getElementById('deleteAdminId').value = adminId;
+        document.getElementById('deleteAdminUsername').textContent = username;
+        var deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+        deleteModal.show();
+    }
+    </script>
     <?php endif; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
