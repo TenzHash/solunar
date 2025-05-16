@@ -365,3 +365,14 @@
     [message] => Hi, painquire po.
 )
 
+[2025-05-14 19:41:30] Received appointment request: Array
+(
+    [name] => Terrenze Josh Binamira
+    [email] => sekutsuko0204@gmail.com
+    [phone] => 09936869633
+    [date] => 2025-05-23T18:30
+    [appointment] => installation
+    [location] => albay
+    [message] => 09936121230
+)
+

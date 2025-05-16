@@ -148,6 +148,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <button type="submit" class="btn btn-primary w-100 py-2 mt-2">Login</button>
             </form>
+            <div class="mt-3 text-center">
+                <a href="../home.php" class="btn btn-outline-secondary w-100 py-2">
+                    <i class="bi bi-house-door me-1"></i> Back to Homepage
+                </a>
+            </div>
         </div>
         <div class="login-footer">
             &copy; <?php echo date('Y'); ?> SOLUNAR. All Rights Reserved.

@@ -287,7 +287,7 @@
     }
 
     // Process order (implement your order processing logic here)
-    alert('Order completed successfully!');
+    showGlobalMessage('Order completed successfully!');
     checkoutModal.hide();
     // Clear cart after successful order
     cart = [];
@@ -335,11 +335,39 @@ document.getElementById('adminLoginForm').addEventListener('submit', async funct
         document.head.appendChild(meta);
       }
     } else {
-      alert(data.error || 'Login failed');
+      showGlobalMessage(data.error || 'Login failed');
     }
   } catch (error) {
     console.error('Login error:', error);
-    alert('An error occurred during login');
+    showGlobalMessage('An error occurred during login');
   }
 });
+
+// Add a global modal to the HTML (if not already present)
+function showGlobalMessage(message) {
+  let modal = document.getElementById('globalMessageModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.className = 'modal fade';
+    modal.id = 'globalMessageModal';
+    modal.tabIndex = -1;
+    modal.innerHTML = `
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Notice</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="globalMessageModalBody"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+  document.getElementById('globalMessageModalBody').textContent = message;
+  new bootstrap.Modal(modal).show();
+}
 

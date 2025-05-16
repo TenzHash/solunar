@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const productImage = document.getElementById('productImage').files[0];
 
         if (!productName || !productPrice || !productCategory || !productDescription) {
-            alert('Please fill in all required fields');
+            showGlobalMessage('Please fill in all required fields');
             return;
         }
 
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loadProducts();
         } catch (error) {
             console.error('Error saving product:', error);
-            alert('Error saving product. Please try again.');
+            showGlobalMessage('Error saving product. Please try again.');
         }
     });
 
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
             productModal.style.display = 'block';
         } catch (error) {
             console.error('Error loading product:', error);
-            alert('Error loading product. Please try again.');
+            showGlobalMessage('Error loading product. Please try again.');
         }
     };
 
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadProducts();
             } catch (error) {
                 console.error('Error deleting product:', error);
-                alert('Error deleting product. Please try again.');
+                showGlobalMessage('Error deleting product. Please try again.');
             }
         }
     };
@@ -157,6 +157,34 @@ document.addEventListener('DOMContentLoaded', () => {
     function resetForm() {
         productForm.reset();
         document.getElementById('productImage').value = '';
+    }
+
+    // Add a global modal function for admin
+    function showGlobalMessage(message) {
+        let modal = document.getElementById('globalMessageModal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.className = 'modal fade';
+            modal.id = 'globalMessageModal';
+            modal.tabIndex = -1;
+            modal.innerHTML = `
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Notice</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" id="globalMessageModalBody"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        document.getElementById('globalMessageModalBody').textContent = message;
+        new bootstrap.Modal(modal).show();
     }
 
     // Initialize Firebase and load products

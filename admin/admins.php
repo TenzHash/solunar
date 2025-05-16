@@ -285,12 +285,12 @@ $admins = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                         document.getElementById('errorModalBody').innerHTML = `<?php echo htmlspecialchars($_GET['error']); ?>`;
                         var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
                         errorModal.show();
-                    <?php endif; ?>
-                    <?php if (!empty($errors)): ?>
+                <?php endif; ?>
+                <?php if (!empty($errors)): ?>
                         document.getElementById('errorModalBody').innerHTML = `<ul class='mb-0'><?php foreach ($errors as $error) { echo '<li>' . htmlspecialchars($error) . '</li>'; } ?></ul>`;
                         var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
                         errorModal.show();
-                    <?php endif; ?>
+                <?php endif; ?>
                 });
                 </script>
 
@@ -333,8 +333,8 @@ $admins = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                                                 </button>
                                                 <?php if ($admin['id'] !== $_SESSION['admin_id']): ?>
                                                 <button type="button" class="btn btn-sm btn-danger" onclick="showDeleteModal(<?php echo $admin['id']; ?>, '<?php echo htmlspecialchars(addslashes($admin['username'])); ?>')">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
+                                                        <i class="bi bi-trash"></i> 
+                                                    </button>
                                                 <?php endif; ?>
                                             </div>
                                         </td>

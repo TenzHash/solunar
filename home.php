@@ -1982,7 +1982,7 @@ No shortcuts. We provide clear ROI calculations (average 4.7 years ) and ensure 
       // Validate inputs
       if (isNaN(monthlyBill) || !usageType || isNaN(panelSize) || isNaN(panelCount) || 
           isNaN(backupDays) || isNaN(backupHours) || !location || !systemType) {
-        alert('Please fill in all required fields');
+        showGlobalMessage('Please fill in all required fields');
         return;
       }
 
@@ -2096,7 +2096,7 @@ No shortcuts. We provide clear ROI calculations (average 4.7 years ) and ensure 
 
       // Validate inputs
       if (isNaN(monthlyBill) || isNaN(roofArea) || isNaN(usageHours) || !location || !systemType) {
-        alert('Please fill in all required fields');
+        showGlobalMessage('Please fill in all required fields');
         return;
       }
 
@@ -2202,7 +2202,7 @@ No shortcuts. We provide clear ROI calculations (average 4.7 years ) and ensure 
       // Validate inputs
       if (isNaN(panelCount) || isNaN(panelWattage) || !location || isNaN(systemEfficiency) || 
           isNaN(monthlyBill) || !usagePattern) {
-        alert('Please fill in all required fields');
+        showGlobalMessage('Please fill in all required fields');
         return;
       }
 
@@ -2492,17 +2492,17 @@ No shortcuts. We provide clear ROI calculations (average 4.7 years ) and ensure 
 
       // Admin panel button handlers
       document.getElementById('manageProductsBtn').addEventListener('click', function() {
-        alert('Product management functionality will be implemented here');
+        showGlobalMessage('Product management functionality will be implemented here');
         // Add your product management logic here
       });
 
       document.getElementById('viewOrdersBtn').addEventListener('click', function() {
-        alert('Order management functionality will be implemented here');
+        showGlobalMessage('Order management functionality will be implemented here');
         // Add your order management logic here
       });
 
       document.getElementById('viewAnalyticsBtn').addEventListener('click', function() {
-        alert('Analytics functionality will be implemented here');
+        showGlobalMessage('Analytics functionality will be implemented here');
         // Add your analytics logic here
       });
     });
@@ -3155,7 +3155,7 @@ No shortcuts. We provide clear ROI calculations (average 4.7 years ) and ensure 
       // Validate inputs
       if (isNaN(monthlyBill) || !usageType || isNaN(panelSize) || isNaN(panelCount) || 
           isNaN(backupDays) || isNaN(backupHours) || !location || !systemType) {
-        alert('Please fill in all required fields');
+        showGlobalMessage('Please fill in all required fields');
         return;
       }
 
@@ -3269,7 +3269,7 @@ No shortcuts. We provide clear ROI calculations (average 4.7 years ) and ensure 
 
       // Validate inputs
       if (isNaN(monthlyBill) || isNaN(roofArea) || isNaN(usageHours) || !location || !systemType) {
-        alert('Please fill in all required fields');
+        showGlobalMessage('Please fill in all required fields');
         return;
       }
 
@@ -3375,7 +3375,7 @@ No shortcuts. We provide clear ROI calculations (average 4.7 years ) and ensure 
       // Validate inputs
       if (isNaN(panelCount) || isNaN(panelWattage) || !location || isNaN(systemEfficiency) || 
           isNaN(monthlyBill) || !usagePattern) {
-        alert('Please fill in all required fields');
+        showGlobalMessage('Please fill in all required fields');
         return;
       }
 
@@ -3497,6 +3497,32 @@ No shortcuts. We provide clear ROI calculations (average 4.7 years ) and ensure 
       document.getElementById('simulationForm').reset();
       document.getElementById('simulationResults').innerHTML = '';
     }
+  </script>
+
+  <!-- Global Message Modal -->
+  <div class="modal fade" id="globalMessageModal" tabindex="-1" aria-labelledby="globalMessageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="globalMessageModalLabel">Notice</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="globalMessageModalBody">
+          <!-- Message will be injected here -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  function showGlobalMessage(message) {
+    document.getElementById('globalMessageModalBody').textContent = message;
+    var modal = new bootstrap.Modal(document.getElementById('globalMessageModal'));
+    modal.show();
+  }
   </script>
 
 </body>
