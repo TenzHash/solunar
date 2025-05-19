@@ -1,32 +1,39 @@
 <?php
 session_start();
-require_once '../config/database.php';
+require_once 'config/database.php';
+
+// Redirect if already logged in
+if (isset($_SESSION['user_id'])) {
+    header('Location: home.php');
+    exit;
+}
+
+$error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'] ?? '';
+    $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
     
-    $stmt = $conn->prepare("SELECT id, username, password, role FROM admin_accounts WHERE username = ?");
-    $stmt->bind_param("s", $username);
+    $stmt = $conn->prepare("SELECT id, password, role FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
     
     if ($row = $result->fetch_assoc()) {
         if (password_verify($password, $row['password'])) {
-            $_SESSION['admin_id'] = $row['id'];
-            $_SESSION['admin_username'] = $row['username'];
-            $_SESSION['admin_role'] = $row['role'];
-            
-            // Log activity
-            $stmt = $conn->prepare("INSERT INTO activity_logs (admin_id, action, entity_type) VALUES (?, 'login', 'admin')");
-            $stmt->bind_param("i", $row['id']);
-            $stmt->execute();
-            
-            header("Location: index.php");
-            exit;
+            if ($row['role'] === 'user') {
+                $_SESSION['user_id'] = $row['id'];
+                header('Location: home.php');
+                exit;
+            } else {
+                $error = 'Please use the admin login page';
+            }
+        } else {
+            $error = 'Invalid password';
         }
+    } else {
+        $error = 'Email not found';
     }
-    $error = "Invalid username or password";
 }
 ?>
 <!DOCTYPE html>
@@ -34,13 +41,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Solunar</title>
+    <title>Customer Login - Solunar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body {
             min-height: 100vh;
-            background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%), url('../assets/img/learn-bg.jpg') center center/cover no-repeat;
+            background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%), url('assets/img/learn-bg.jpg') center center/cover no-repeat;
             position: relative;
         }
         .bg-overlay {
@@ -58,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
             backdrop-filter: blur(8px);
             position: relative;
-            z-index: 2;
+            z-index: 2;     
             animation: fadeInUp 0.8s cubic-bezier(.39,.575,.56,1.000);
         }
         @keyframes fadeInUp {
@@ -127,15 +134,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container">
         <div class="login-container shadow-lg">
             <div class="login-logo">
-                <img src="../assets/images/assets/logo.png" alt="Solunar Logo">
+                <img src="assets/images/assets/logo.png" alt="Solunar Logo">
             </div>
             <h4 class="text-center mb-4 fw-bold" style="color:#007bff;">Login</h4>
             <form method="POST" action="" autocomplete="off">
                 <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
+                    <label for="email" class="form-label">Email</label>
                     <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-person"></i></span>
-                        <input type="text" class="form-control" id="username" name="username" required autofocus>
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <input type="email" class="form-control" id="email" name="email" required autofocus>
                     </div>
                 </div>
                 <div class="mb-3">
@@ -149,11 +156,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button type="submit" class="btn btn-primary w-100 py-2 mt-2">Login</button>
             </form>
             <div class="mt-3 text-center">
-                <a href="../customer-login.php" class="btn btn-outline-primary w-100 py-2 mb-2">
-                    <i class="bi bi-person me-1"></i> Customer Login
-                </a>
-                <a href="../home.php" class="btn btn-outline-secondary w-100 py-2">
+                <p class="mb-2">Don't have an account? <a href="register.php" class="text-primary">Register here</a></p>
+                <a href="home.php" class="btn btn-outline-secondary w-100 py-2 mb-2">
                     <i class="bi bi-house-door me-1"></i> Back to Homepage
+                </a>
+                <a href="admin/login.php" class="btn btn-outline-primary w-100 py-2">
+                    <i class="bi bi-shield-lock me-1"></i> Admin Login
                 </a>
             </div>
         </div>
@@ -172,7 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </div>
           <div class="modal-body text-center">
             <i class="bi bi-x-circle-fill text-danger" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-            <h5>Invalid username or password</h5>
+            <h5><?php echo $error; ?></h5>
             <p>Please try again.</p>
           </div>
           <div class="modal-footer justify-content-center">
@@ -199,7 +207,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     });
     // Show error modal if login failed
-    <?php if (isset($error)): ?>
+    <?php if ($error): ?>
       var errorModal = new bootstrap.Modal(document.getElementById('loginErrorModal'));
       errorModal.show();
     <?php endif; ?>

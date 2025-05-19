@@ -28,6 +28,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 </a>
             </li>
             <li class="nav-item mb-1">
+                <a class="nav-link d-flex align-items-center gap-2 px-4 py-2 rounded-pill <?php echo $current_page === 'orders.php' ? 'active' : ''; ?>" href="/Solunar/admin/orders.php">
+                    <i class="bi bi-bag"></i> <span>Orders</span>
+                </a>
+            </li>
+            <li class="nav-item mb-1">
                 <a class="nav-link d-flex align-items-center gap-2 px-4 py-2 rounded-pill <?php echo $current_page === 'featured_products.php' ? 'active' : ''; ?>" href="/Solunar/admin/featured_products.php">
                     <i class="bi bi-star"></i> <span>Featured Products</span>
                 </a>

@@ -43,6 +43,29 @@ try {
     $error = "Error fetching approved reviews.";
 }
 
+// Get order statistics
+$stmt = $conn->prepare("
+    SELECT 
+        COUNT(*) as total_orders,
+        SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_orders,
+        SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed_orders,
+        SUM(total_amount) as total_sales
+    FROM orders
+");
+$stmt->execute();
+$order_stats = $stmt->get_result()->fetch_assoc();
+
+// Get recent orders
+$stmt = $conn->prepare("
+    SELECT o.*, u.username, u.email
+    FROM orders o
+    JOIN users u ON o.user_id = u.id
+    ORDER BY o.created_at DESC
+    LIMIT 5
+");
+$stmt->execute();
+$recent_orders = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
 // Get recent activities
 $stmt = $conn->prepare("
     SELECT al.*, aa.username as admin_name 
@@ -232,6 +255,42 @@ function formatCategoryName($cat) {
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card text-center">
+                            <div class="card-body py-4">
+                                <div class="mb-2"><i class="bi bi-cart" style="font-size:2.2rem;color:#28a745;"></i></div>
+                                <h5 class="card-title">Total Orders</h5>
+                                <h2 class="mb-0 fw-bold" style="color:#28a745;"><?php echo $order_stats['total_orders']; ?></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card text-center">
+                            <div class="card-body py-4">
+                                <div class="mb-2"><i class="bi bi-clock" style="font-size:2.2rem;color:#ffc107;"></i></div>
+                                <h5 class="card-title">Pending Orders</h5>
+                                <h2 class="mb-0 fw-bold" style="color:#ffc107;"><?php echo $order_stats['pending_orders']; ?></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card text-center">
+                            <div class="card-body py-4">
+                                <div class="mb-2"><i class="bi bi-check-circle" style="font-size:2.2rem;color:#28a745;"></i></div>
+                                <h5 class="card-title">Completed Orders</h5>
+                                <h2 class="mb-0 fw-bold" style="color:#28a745;"><?php echo $order_stats['completed_orders']; ?></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card text-center">
+                            <div class="card-body py-4">
+                                <div class="mb-2"><i class="bi bi-currency-dollar" style="font-size:2.2rem;color:#007bff;"></i></div>
+                                <h5 class="card-title">Total Sales</h5>
+                                <h2 class="mb-0 fw-bold" style="color:#007bff;">₱<?php echo number_format($order_stats['total_sales'], 2); ?></h2>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <?php if ($error): ?>
@@ -349,6 +408,64 @@ function formatCategoryName($cat) {
                                         </tbody>
                                     </table>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="col-12 mt-4">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Recent Orders</h5>
+                            <a href="orders.php" class="btn btn-primary btn-sm">View All Orders</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Order ID</th>
+                                            <th>Customer</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($recent_orders as $order): ?>
+                                            <tr>
+                                                <td>#<?php echo str_pad($order['id'], 6, '0', STR_PAD_LEFT); ?></td>
+                                                <td>
+                                                    <div><?php echo htmlspecialchars($order['username']); ?></div>
+                                                    <small class="text-muted"><?php echo htmlspecialchars($order['email']); ?></small>
+                                                </td>
+                                                <td>₱<?php echo number_format($order['total_amount'], 2); ?></td>
+                                                <td>
+                                                    <span class="badge bg-<?php 
+                                                        echo match($order['status']) {
+                                                            'pending' => 'warning',
+                                                            'processing' => 'info',
+                                                            'completed' => 'success',
+                                                            'cancelled' => 'danger',
+                                                            default => 'secondary'
+                                                        };
+                                                    ?>">
+                                                        <?php echo ucfirst($order['status']); ?>
+                                                    </span>
+                                                </td>
+                                                <td><?php echo date('M d, Y H:i', strtotime($order['created_at'])); ?></td>
+                                                <td>
+                                                    <a href="order_details.php?id=<?php echo $order['id']; ?>" 
+                                                       class="btn btn-sm btn-primary">
+                                                        <i class="bi bi-eye"></i> View
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

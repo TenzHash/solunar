@@ -1,3 +1,7 @@
+<?php
+session_start();
+require_once 'config/database.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -679,6 +683,43 @@
     .form-select:valid {
         border-color: #198754;
     }
+
+    /* Add this in the head section after the existing styles */
+    <style>
+        .add-to-cart-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .add-to-cart-btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .add-to-cart-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+            margin: 0 10px;
+        }
+        
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+    </style>
   </style>
 
 </head>
@@ -705,7 +746,43 @@
             <li><a href="#testimonials">Testimonials</a></li>
             <li><a href="#learn">Learn</a></li>
             <li><a href="#faq">FAQ</a></li>
-            <li><a href="admin/index.php" id="adminLoginLink">Login</a></li>
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <li><a href="profile.php">
+                    <i class="bi bi-person"></i> Profile
+                </a></li>
+                <li><a href="cart.php" class="position-relative">
+                    <i class="bi bi-cart3"></i>
+                    <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <?php
+                        $stmt = $conn->prepare("SELECT COUNT(*) as count FROM cart WHERE user_id = ?");
+                        $stmt->bind_param("i", $_SESSION['user_id']);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+                        $count = $result->fetch_assoc()['count'];
+                        echo $count;
+                        ?>
+                    </span>
+                </a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle"></i> Account
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="profile.php">
+                            <i class="bi bi-person me-2"></i> My Profile
+                        </a></li>
+                        <li><a class="dropdown-item" href="orders.php">
+                            <i class="bi bi-bag me-2"></i> My Orders
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="logout.php">
+                            <i class="bi bi-box-arrow-right me-2"></i> Logout
+                        </a></li>
+                    </ul>
+                </li>
+            <?php else: ?>
+                <li><a href="customer-login.php" id="adminLoginLink">Login</a></li>
+            <?php endif; ?>
           </ul>
           <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
         </nav>
@@ -2608,6 +2685,10 @@ No shortcuts. We provide clear ROI calculations (average 4.7 years ) and ensure 
                                 <span class="text-primary fw-bold">₱${product.price}</span>
                                 <span class="badge bg-secondary">${product.category}</span>
                             </div>
+                            
+                            <button class="add-to-cart-btn" onclick="addToCart(${product.id})" id="add-to-cart-${product.id}">
+                                Add to Cart
+                            </button>
                         </div>
                     `;
                     productsGrid.innerHTML += productCard;
@@ -3524,6 +3605,219 @@ No shortcuts. We provide clear ROI calculations (average 4.7 years ) and ensure 
     modal.show();
   }
   </script>
+
+  <script>
+    function increaseQuantity(productId) {
+        const input = document.getElementById(`quantity-${productId}`);
+        const max = parseInt(input.getAttribute('max'));
+        if (parseInt(input.value) < max) {
+            input.value = parseInt(input.value) + 1;
+        }
+    }
+
+    function decreaseQuantity(productId) {
+        const input = document.getElementById(`quantity-${productId}`);
+        if (parseInt(input.value) > 1) {
+            input.value = parseInt(input.value) - 1;
+        }
+    }
+
+    function addToCart(productId) {
+        const quantity = document.getElementById(`quantity-${productId}`).value;
+        const button = document.getElementById(`add-to-cart-${productId}`);
+        
+        // Disable button while processing
+        button.disabled = true;
+        button.textContent = 'Adding...';
+        
+        fetch('api/cart/add.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `product_id=${productId}&quantity=${quantity}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message
+                const toast = new bootstrap.Toast(document.getElementById('cartToast'));
+                document.getElementById('cartToastMessage').textContent = data.message;
+                toast.show();
+                
+                // Update cart count in header if it exists
+                const cartCount = document.getElementById('cartCount');
+                if (cartCount) {
+                    cartCount.textContent = data.cart_count;
+                }
+            } else {
+                // Show error message
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while adding to cart');
+        })
+        .finally(() => {
+            // Re-enable button
+            button.disabled = false;
+            button.textContent = 'Add to Cart';
+        });
+    }
+  </script>
+
+  <!-- Add this before the closing </body> tag -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div id="cartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header">
+              <strong class="me-auto">Cart Update</strong>
+              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body" id="cartToastMessage">
+          </div>
+      </div>
+  </div>
+
+  <!-- Add this after the existing JavaScript code -->
+  <script>
+    function addToCart(productId) {
+        const quantityInput = document.getElementById(`quantity-${productId}`);
+        const quantity = parseInt(quantityInput.value);
+        
+        if (quantity < 1) {
+            alert('Please select a valid quantity');
+            return;
+        }
+        
+        fetch('api/cart/add.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `product_id=${productId}&quantity=${quantity}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update cart count in header
+                const cartCount = document.getElementById('cart-count');
+                if (cartCount) {
+                    cartCount.textContent = data.cart_count;
+                }
+                
+                // Show success message
+                const toast = new bootstrap.Toast(document.getElementById('cartToast'));
+                document.getElementById('cartToastMessage').textContent = data.message;
+                toast.show();
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while adding to cart');
+        });
+    }
+
+    function increaseQuantity(productId) {
+        const input = document.getElementById(`quantity-${productId}`);
+        const max = parseInt(input.getAttribute('max'));
+        const currentValue = parseInt(input.value);
+        
+        if (currentValue < max) {
+            input.value = currentValue + 1;
+        }
+    }
+
+    function decreaseQuantity(productId) {
+        const input = document.getElementById(`quantity-${productId}`);
+        const currentValue = parseInt(input.value);
+        
+        if (currentValue > 1) {
+            input.value = currentValue - 1;
+        }
+    }
+</script>
+
+<!-- Add this before the closing body tag -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="cartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Cart Update</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="cartToastMessage"></div>
+    </div>
+</div>
+
+<!-- Solar Panels Popup -->
+<div class="modal fade" id="solarPanelsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Solar Panels</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row" id="solarPanelsProducts">
+                    <!-- Products will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Battery Popup -->
+<div class="modal fade" id="batteryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Batteries</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row" id="batteryProducts">
+                    <!-- Products will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Inverter Popup -->
+<div class="modal fade" id="inverterModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Inverters</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row" id="inverterProducts">
+                    <!-- Products will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Accessories Popup -->
+<div class="modal fade" id="accessoriesModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Accessories</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row" id="accessoriesProducts">
+                    <!-- Products will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 
